@@ -27,7 +27,6 @@ namespace Carniceria.Models
         [Required(ErrorMessage = "Debe escribir la fecha de nacimiento...")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaNacimiento { get; set; }
-
     }
 }
 

@@ -9,5 +9,6 @@
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public DateTime FechaNacimiento { get; set; }
+
     }
 }

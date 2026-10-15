@@ -22,6 +22,6 @@ namespace Carniceria.Models
         public string Puesto { get; set; }
 
         [Required(ErrorMessage = "Debe escribir el turno...")]
-        public string Turno { get; set; 
+        public string Turno { get; set; } 
     }
-}
+ }

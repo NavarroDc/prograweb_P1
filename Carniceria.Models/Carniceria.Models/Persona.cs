@@ -6,7 +6,7 @@ namespace Carniceria.Models
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Debe escribir el tipo de identificación...")]
+        [Required(ErrorMessage = "Debe seleccionar el tipo de identificación...")]
         public string TipoIdentificacion { get; set; }
 
         [Required(ErrorMessage = "Debe escribir la identificación...")]

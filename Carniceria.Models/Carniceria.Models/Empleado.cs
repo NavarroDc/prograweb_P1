@@ -15,13 +15,13 @@ namespace Carniceria.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaIngreso { get; set; }
 
-        [Required(ErrorMessage = "Debe escribir el área de trabajo...")]
+        [Required(ErrorMessage = "Debe seleccionar el área de trabajo...")]
         public string AreaTrabajo { get; set; }
 
-        [Required(ErrorMessage = "Debe escribir el puesto...")]
+        [Required(ErrorMessage = "Debe seleccionar el puesto...")]
         public string Puesto { get; set; }
 
-        [Required(ErrorMessage = "Debe escribir el turno...")]
+        [Required(ErrorMessage = "Debe seleccionar el turno...")]
         public string Turno { get; set; } 
     }
  }

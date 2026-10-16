@@ -36,6 +36,28 @@ namespace Carniceria.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(clienteNuevo);
-        } 
+        }
+
+        //BUSCAR CLIENTE
+        //Muestra pantalla de búsqueda
+        [HttpGet]
+        public IActionResult Buscar()
+        {
+            return View();
+        }
+
+        //Procesa la búsqueda
+        [HttpPost]
+        public IActionResult Buscar(string identificacion)
+        {
+            var clienteEncontrado = listaClientes.FirstOrDefault(c => c.Identificacion == identificacion);
+
+            if(clienteEncontrado == null)
+            {
+                ViewBag.Mensaje = "No se encontraron clientes con la identificación ingresada";
+            }
+
+            return View(clienteEncontrado);
+        }
     }
 }

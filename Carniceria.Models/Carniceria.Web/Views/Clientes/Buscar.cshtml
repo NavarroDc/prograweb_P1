@@ -6,12 +6,11 @@
 
 <h2>Buscar Cliente por Identificación</h2>
 
-<!-- 1. El Formulario de búsqueda -->
+
 <form asp-action="Buscar" method="post" style="margin-bottom: 20px;">
     <div style="margin-bottom: 15px;">
         <label style="font-weight: bold;">Ingrese la identificación exacta:</label><br />
-        <!-- OJO AQUÍ: El atributo name="identificacion" debe llamarse exactamente igual
-             al parámetro que pusiste en tu método [HttpPost] Buscar(string identificacion) -->
+        
         <input type="text" name="identificacion" style="padding: 5px; width: 100%; max-width: 300px;" required />
     </div>
     <div>
@@ -22,7 +21,7 @@
 
 <hr />
 
-<!-- 2. Requerimiento cumplido: Mensaje de error si no existe -->
+
 @if (ViewBag.Mensaje != null)
 {
     <div style="color: #d9534f; font-weight: bold; margin-bottom: 15px; padding: 15px; border: 1px solid #d9534f; background-color: #fdf5f5; max-width: 450px;">
@@ -30,7 +29,7 @@
     </div>
 }
 
-<!-- 3. Mostrar la tarjeta con la información si la búsqueda fue exitosa -->
+
 @if (Model != null)
 {
     <h3 style="color: #28a745; margin-top: 20px;">Resultado de la búsqueda</h3>
@@ -41,7 +40,7 @@
         <p><strong>Nombre Completo:</strong> @Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</p>
         <p><strong>@Html.DisplayNameFor(model => model.FechaNacimiento):</strong> @Model.FechaNacimiento.ToShortDateString()</p>
 
-        <!-- Agregamos atajos útiles para no tener que volver a la tabla -->
+        
         <div style="margin-top: 15px;">
             <a asp-action="Actualizar" asp-route-id="@Model.Id" style="text-decoration: none; color: #007bff; font-weight: bold;">Editar datos</a> |
             <a asp-action="Eliminar" asp-route-id="@Model.Id" style="text-decoration: none; color: #d9534f; font-weight: bold;">Eliminar registro</a>

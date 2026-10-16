@@ -1,4 +1,5 @@
-﻿@model Carniceria.Models.Cliente
+﻿<!-- Conecta esta pantalla con la clase Cliente para saber qué datos pedir -->
+@model Carniceria.Models.Cliente
 
 @{
     ViewData["Title"] = "Registrar Cliente";
@@ -6,9 +7,10 @@
 
 <h2>Registrar Nuevo Cliente</h2>
 
+<!-- Inicia el formulario que enviará los datos recolectados al controlador -->
 <form asp-action="Create" method="post">
 
-    
+    <!-- Lista desplegable para que el usuario elija el tipo de documento -->
     <div style="margin-bottom: 15px;">
         <label asp-for="TipoIdentificacion" style="font-weight: bold;"></label><br />
         <select asp-for="TipoIdentificacion" style="padding: 5px; width: 100%; max-width: 300px;">
@@ -17,12 +19,15 @@
             <option value="DIMEX">DIMEX</option>
             <option value="Pasaporte">Pasaporte</option>
         </select>
+        <!-- Muestra un mensaje en rojo si no se selecciona nada -->
         <span asp-validation-for="TipoIdentificacion" style="color: red;"></span>
     </div>
 
+    <!-- Cajas de texto enlazadas directamente a los atributos del modelo -->
     <div style="margin-bottom: 15px;">
         <label asp-for="Identificacion" style="font-weight: bold;"></label><br />
         <input asp-for="Identificacion" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <!-- Imprime el error si el campo queda vacío o incumple las reglas -->
         <span asp-validation-for="Identificacion" style="color: red;"></span>
     </div>
 
@@ -44,12 +49,14 @@
         <span asp-validation-for="SegundoApellido" style="color: red;"></span>
     </div>
 
+    <!-- El tipo "date" le dice al navegador que despliegue un calendario visual -->
     <div style="margin-bottom: 15px;">
         <label asp-for="FechaNacimiento" style="font-weight: bold;"></label><br />
         <input asp-for="FechaNacimiento" type="date" style="padding: 5px; width: 100%; max-width: 300px;" />
         <span asp-validation-for="FechaNacimiento" style="color: red;"></span>
     </div>
 
+    <!-- Botones finales para enviar la información o regresar a la lista -->
     <div style="margin-top: 20px;">
         <input type="submit" value="Guardar Cliente" style="background-color: #4CAF50; color: white; padding: 8px 15px; border: none; cursor: pointer; font-weight: bold;" />
         <a asp-action="Index" style="margin-left: 15px; text-decoration: none; color: #d9534f; font-weight: bold;">Cancelar</a>

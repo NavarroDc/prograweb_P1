@@ -59,5 +59,41 @@ namespace Carniceria.Web.Controllers
 
             return View(clienteEncontrado);
         }
+
+        //ACTUALIZAR CLIENTE
+        //Busca cliente y muestra el formulario lleno
+        [HttpGet]
+        public IActionResult Actualizar(Guid id)
+        {
+            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+
+            if(cliente == null)
+            {
+                return NotFound();//Error en caso de que no exista
+            }
+
+            return View(cliente);
+        }
+
+        //Captura lo datos actualizados, valida y guarda
+        [HttpPost]
+        public IActionResult Actualizar (Cliente clienteActualizado)
+        {
+            if (ModelState.IsValid)
+            {
+                var index = listaClientes.FindIndex(c => c.Id == clienteActualizado.Id);
+
+                if (index != -1)
+                {
+                    listaClientes[index] = clienteActualizado;
+
+                    TempData["MensajeExito"] = "¡El cliente fue actualizado correctamente!";
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(clienteActualizado);
+        }
     }
 }

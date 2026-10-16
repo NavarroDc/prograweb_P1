@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Carniceria.Models/Carniceria.Models.csproj" />
+  <Project Path="Carniceria.Web/Carniceria.Web.csproj" Id="8ae0ab89-9c15-46bb-9636-0bffe9622660" />
 </Solution>

@@ -1,0 +1,60 @@
+﻿@model Carniceria.Models.Cliente
+
+@{
+    ViewData["Title"] = "Actualizar Cliente";
+}
+
+<h2>Actualizar Información del Cliente</h2>
+
+<form asp-action="Actualizar" method="post">
+
+    
+    <input type="hidden" asp-for="Id" />
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="TipoIdentificacion" style="font-weight: bold;"></label><br />
+        <select asp-for="TipoIdentificacion" style="padding: 5px; width: 100%; max-width: 300px;">
+            <option value="">-- Seleccione un tipo --</option>
+            <option value="Cédula nacional">Cédula nacional</option>
+            <option value="DIMEX">DIMEX</option>
+            <option value="Pasaporte">Pasaporte</option>
+        </select>
+        <span asp-validation-for="TipoIdentificacion" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="Identificacion" style="font-weight: bold;"></label><br />
+        <input asp-for="Identificacion" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <span asp-validation-for="Identificacion" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="Nombre" style="font-weight: bold;"></label><br />
+        <input asp-for="Nombre" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <span asp-validation-for="Nombre" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="PrimerApellido" style="font-weight: bold;"></label><br />
+        <input asp-for="PrimerApellido" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <span asp-validation-for="PrimerApellido" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="SegundoApellido" style="font-weight: bold;"></label><br />
+        <input asp-for="SegundoApellido" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <span asp-validation-for="SegundoApellido" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label asp-for="FechaNacimiento" style="font-weight: bold;"></label><br />
+        <input asp-for="FechaNacimiento" type="date" style="padding: 5px; width: 100%; max-width: 300px;" />
+        <span asp-validation-for="FechaNacimiento" style="color: red;"></span>
+    </div>
+
+    <div style="margin-top: 20px;">
+       
+        <input type="submit" value="Actualizar Datos" style="background-color: #007bff; color: white; padding: 8px 15px; border: none; cursor: pointer; font-weight: bold;" />
+        <a asp-action="Index" style="margin-left: 15px; text-decoration: none; color: #d9534f; font-weight: bold;">Cancelar</a>
+    </div>
+</form>

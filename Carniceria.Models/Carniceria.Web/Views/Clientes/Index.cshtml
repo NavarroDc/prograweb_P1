@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Carniceria.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Consultar Clientes";
+}
+
+<h2>Listado de Clientes</h2>
+
+
+@if (TempData["MensajeExito"] != null)
+{
+    <div style="color: green; font-weight: bold; margin-bottom: 15px;">
+        @TempData["MensajeExito"]
+    </div>
+}
+
+<div style="margin-bottom: 15px;">
+    
+    <a asp-action="Create">Registrar Nuevo Cliente</a> |
+    <a asp-action="Buscar">Ir a Buscar Cliente</a>
+</div>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+        <tr>
+            
+            <th>Id Interno</th>
+            <th>@Html.DisplayNameFor(model => model.TipoIdentificacion)</th>
+            <th>@Html.DisplayNameFor(model => model.Identificacion)</th>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.PrimerApellido)</th>
+            <th>@Html.DisplayNameFor(model => model.SegundoApellido)</th>
+            <th>@Html.DisplayNameFor(model => model.FechaNacimiento)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    
+                    <td style="font-size: 0.8em; color: gray;">@item.Id</td>
+
+                    
+                    <td>@item.TipoIdentificacion</td>
+
+                    <td>@item.Identificacion</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.PrimerApellido</td>
+                    <td>@item.SegundoApellido</td>
+
+                    
+                    <td>@item.FechaNacimiento.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="Actualizar" asp-route-id="@item.Id">Actualizar</a> |
+                        <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                
+                <td colspan="8">Aún no hay clientes registrados en el sistema.</td>
+            </tr>
+        }
+    </tbody>
+</table>

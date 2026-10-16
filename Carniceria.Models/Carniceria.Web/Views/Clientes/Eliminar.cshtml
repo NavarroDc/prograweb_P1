@@ -1,0 +1,32 @@
+﻿@model Carniceria.Models.Cliente
+
+@{
+    ViewData["Title"] = "Eliminar Cliente";
+}
+
+<h2 style="color: #d9534f;">Confirmación de Eliminación</h2>
+<p style="font-size: 1.1em;">¿Está seguro de que desea eliminar a este cliente del sistema? Esta acción no se puede deshacer.</p>
+<hr />
+
+
+<div style="margin-bottom: 25px; margin-top: 20px;">
+    <p><strong>Id Interno:</strong> <span style="color: gray; font-size: 0.9em;">@Model.Id</span></p>
+    <p><strong>@Html.DisplayNameFor(model => model.TipoIdentificacion):</strong> @Model.TipoIdentificacion</p>
+    <p><strong>@Html.DisplayNameFor(model => model.Identificacion):</strong> @Model.Identificacion</p>
+
+    
+    <p><strong>Nombre Completo:</strong> @Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</p>
+
+    <p><strong>@Html.DisplayNameFor(model => model.FechaNacimiento):</strong> @Model.FechaNacimiento.ToShortDateString()</p>
+</div>
+
+
+<form asp-action="Eliminar" method="post">
+
+    
+    <input type="hidden" asp-for="Id" />
+
+    <input type="submit" value="Confirmar Eliminación" style="background-color: #d9534f; color: white; padding: 8px 15px; border: none; cursor: pointer; font-weight: bold;" />
+    <a asp-action="Index" style="margin-left: 15px; text-decoration: none; color: #007bff; font-weight: bold;">Cancelar y Volver</a>
+
+</form>

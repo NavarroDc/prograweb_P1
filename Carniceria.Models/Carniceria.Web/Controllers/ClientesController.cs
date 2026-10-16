@@ -95,5 +95,35 @@ namespace Carniceria.Web.Controllers
 
             return View(clienteActualizado);
         }
+
+        //ELIMINAR CLIENTE
+        //Busca al cliente y muestra la pantalla de confirmación
+        [HttpGet]
+        public IActionResult Eliminar(Guid id)
+        {
+            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+
+            if( cliente == null)
+            {
+                return NotFound();
+            }
+
+            return View(cliente);
+        }
+
+        //Procesa el borrado final
+        [HttpPost, ActionName("Eliminar")]
+        public IActionResult EliminarConfirmado(Guid id)
+        {
+            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+
+            if(cliente != null)
+            {
+                listaClientes.Remove(cliente);//Se elimina definitivamente
+                TempData["MensajeExito"] = "¡El cliente ha sido eliminado correctamente!";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

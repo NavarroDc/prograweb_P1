@@ -1,0 +1,134 @@
+﻿@model Carniceria.Models.Empleado
+
+@{
+    ViewData["Title"] = "Registrar Empleado";
+}
+
+<h2>Registrar Nuevo Empleado</h2>
+<hr />
+
+<form asp-action="Create" method="post">
+
+    <!-- Empleados solo permiten Cédula nacional o DIMEX -->
+    <p>
+        <label asp-for="TipoIdentificacion"></label><br />
+        <select asp-for="TipoIdentificacion">
+            <option value="">-- Seleccione un tipo --</option>
+            <option value="Cédula nacional">Cédula nacional</option>
+            <option value="DIMEX">DIMEX</option>
+        </select>
+        <span asp-validation-for="TipoIdentificacion" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="Identificacion"></label><br />
+        <input asp-for="Identificacion" />
+        <span asp-validation-for="Identificacion" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="Nombre"></label><br />
+        <input asp-for="Nombre" />
+        <span asp-validation-for="Nombre" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="PrimerApellido"></label><br />
+        <input asp-for="PrimerApellido" />
+        <span asp-validation-for="PrimerApellido" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="SegundoApellido"></label><br />
+        <input asp-for="SegundoApellido" />
+        <span asp-validation-for="SegundoApellido" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="FechaNacimiento"></label><br />
+        <input asp-for="FechaNacimiento" type="date" />
+        <span asp-validation-for="FechaNacimiento" style="color: red;"></span>
+    </p>
+
+    <!-- Campos exclusivos de Empleado -->
+    <p>
+        <label asp-for="SalarioMensual"></label><br />
+        <input asp-for="SalarioMensual" type="number" step="0.01" />
+        <span asp-validation-for="SalarioMensual" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="FechaIngreso"></label><br />
+        <input asp-for="FechaIngreso" type="date" />
+        <span asp-validation-for="FechaIngreso" style="color: red;"></span>
+    </p>
+
+    <!-- Radio Buttons para el Turno-->
+    <p>
+        <label>Turno:</label><br />
+        <input type="radio" asp-for="Turno" value="Mañana" id="turnoManana" /> <label for="turnoManana">Mañana</label><br />
+        <input type="radio" asp-for="Turno" value="Tarde" id="turnoTarde" /> <label for="turnoTarde">Tarde</label><br />
+        <input type="radio" asp-for="Turno" value="Mixto" id="turnoMixto" /> <label for="turnoMixto">Mixto</label><br />
+        <span asp-validation-for="Turno" style="color: red;"></span>
+    </p>
+
+    <!-- Lista principal de Área de Trabajo -->
+    <p>
+        <label asp-for="AreaTrabajo"></label><br />
+        <select asp-for="AreaTrabajo" id="areaTrabajo">
+            <option value="">-- Seleccione un área --</option>
+            <option value="Administración">Administración</option>
+            <option value="Ventas y Caja">Ventas y Caja</option>
+            <option value="Corte y Preparación">Corte y Preparación</option>
+            <option value="Bodega e Inventario">Bodega e Inventario</option>
+            <option value="Distribución">Distribución</option>
+            <option value="Limpieza">Limpieza</option>
+        </select>
+        <span asp-validation-for="AreaTrabajo" style="color: red;"></span>
+    </p>
+
+    <!-- Lista de Puestos -->
+    <p>
+        <label asp-for="Puesto"></label><br />
+        <select asp-for="Puesto" id="puesto">
+            <option value="">-- Seleccione un puesto --</option>
+        </select>
+        <span asp-validation-for="Puesto" style="color: red;"></span>
+    </p>
+
+    <!-- Botón sencillo -->
+    <p>
+        <input type="submit" value="Guardar Empleado" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </p>
+
+</form>
+
+<!-- Puesto depende de área -->
+<script>
+    document.getElementById('areaTrabajo').addEventListener('change', function () {
+        var area = this.value;
+        var puestoSelect = document.getElementById('puesto');
+
+        // Limpiamos las opciones anteriores
+        puestoSelect.innerHTML = '<option value="">-- Seleccione un puesto --</option>';
+
+        var opciones = [];
+
+        // Definimos las relaciones 
+        if (area === 'Administración') opciones = ['Administrador', 'Asistente administrativo'];
+        else if (area === 'Ventas y Caja') opciones = ['Cajero', 'Vendedor', 'Servicio al cliente'];
+        else if (area === 'Corte y Preparación') opciones = ['Carnicero', 'Despostador', 'Empacador'];
+        else if (area === 'Bodega e Inventario') opciones = ['Bodeguero', 'Auxiliar de inventario'];
+        else if (area === 'Distribución') opciones = ['Conductor', 'Ayudante de distribución'];
+        else if (area === 'Limpieza') opciones = ['Personal de limpieza'];
+
+        // Agregamos las nuevas opciones a la lista
+        opciones.forEach(function (puesto) {
+            var opt = document.createElement('option');
+            opt.value = puesto;
+            opt.text = puesto;
+            puestoSelect.appendChild(opt);
+        });
+    });
+</script>

@@ -31,8 +31,11 @@
             <th>Primer apellido</th>
             <th>Segundo apellido</th>
             <th>Fecha de nacimiento</th>
+            <th>Salario mensual</th>
+            <th>Fecha de ingreso</th>
             <th>Área de Trabajo</th>
             <th>Puesto</th>
+            <th>Turno</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -57,8 +60,11 @@
                     <td>@Html.DisplayFor(modelItem => item.PrimerApellido)</td>
                     <td>@Html.DisplayFor(modelItem => item.SegundoApellido)</td>
                     <td>@item.FechaNacimiento.ToShortDateString()</td>
+                    <td>@Html.DisplayFor(modelItem => item.SalarioMensual)</td>
+                    <td>@item.FechaIngreso.ToShortDateString()</td>
                     <td>@Html.DisplayFor(modelItem => item.AreaTrabajo)</td>
                     <td>@Html.DisplayFor(modelItem => item.Puesto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Turno)</td>
                     <td>
                         <a asp-action="Actualizar" asp-route-id="@item.Id">Editar</a> |
                         <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>

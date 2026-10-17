@@ -1,0 +1,53 @@
+﻿@model Carniceria.Models.Empleado
+
+@{
+    ViewData["Title"] = "Buscar Empleado";
+}
+
+<h2>Buscar Empleado</h2>
+<hr />
+
+<!-- Formulario para enviar la identificación al controlador -->
+<form asp-action="Buscar" method="post">
+    <p>
+        <label>Ingrese la identificación del empleado:</label><br />
+        <input type="text" name="identificacion" required />
+    </p>
+    <p>
+        <input type="submit" value="Buscar Empleado" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </p>
+</form>
+
+<!-- Bloque para mostrar el mensaje de error si no existe el registro -->
+@if (ViewBag.Mensaje != null)
+{
+    <p style="color: red;">
+        @ViewBag.Mensaje
+    </p>
+}
+
+<!-- Carga y dibuja los datos si se encontró una coincidencia -->
+@if (Model != null)
+{
+    <hr />
+    <h3>Resultado de la búsqueda</h3>
+
+    <p><strong>Id Interno:</strong> @Model.Id</p>
+    <p><strong>Tipo de identificación:</strong> @Model.TipoIdentificacion</p>
+    <p><strong>Identificación:</strong> @Model.Identificacion</p>
+    <p><strong>Nombre Completo:</strong> @Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</p>
+    <p><strong>Fecha de nacimiento:</strong> @Model.FechaNacimiento.ToShortDateString()</p>
+
+    <p><strong>Área de Trabajo:</strong> @Model.AreaTrabajo</p>
+    <p><strong>Puesto:</strong> @Model.Puesto</p>
+    <p><strong>Turno:</strong> @Model.Turno</p>
+    <p><strong>Salario mensual:</strong> @Model.SalarioMensual.ToString("C")</p>
+    <p><strong>Fecha de ingreso:</strong> @Model.FechaIngreso.ToShortDateString()</p>
+
+    <!-- Atajos para gestionar el registro directamente desde la búsqueda -->
+    <p>
+        <a asp-action="Actualizar" asp-route-id="@Model.Id">Editar</a> |
+        <a asp-action="Eliminar" asp-route-id="@Model.Id">Eliminar</a>
+    </p>
+}

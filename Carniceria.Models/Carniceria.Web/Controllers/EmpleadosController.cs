@@ -130,7 +130,7 @@ namespace Carniceria.Web.Controllers
 
             if (empleado == null)
             {
-                ViewBag.Mensaje = "No se encontraron empleados con esa identificación";
+                ViewBag.Mensaje = "No se encontraron empleados con la identificación ingresada";
                 return View();
             }
 

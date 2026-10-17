@@ -1,0 +1,33 @@
+﻿@model Carniceria.Models.Empleado
+
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+}
+
+<h2>Eliminar Empleado</h2>
+<hr />
+
+<p style="color: red; font-weight: bold;">¿Está seguro de que desea eliminar a este empleado? Esta acción no se puede deshacer.</p>
+
+<!-- Imprime en pantalla los datos básicos para confirmar la identidad antes de borrar -->
+<div>
+    <p><strong>Id Interno:</strong> @Model.Id</p>
+    <p><strong>Identificación:</strong> @Model.Identificacion</p>
+    <p><strong>Nombre Completo:</strong> @Model.Nombre @Model.PrimerApellido @Model.SegundoApellido</p>
+    <p><strong>Área de Trabajo:</strong> @Model.AreaTrabajo</p>
+    <p><strong>Puesto:</strong> @Model.Puesto</p>
+</div>
+
+<hr />
+
+<!-- Formulario de confirmación que conecta con el método POST del controlador -->
+<form asp-action="EliminarConfirmado" method="post">
+
+    <!-- Campo oculto obligatorio para enviar el ID del registro a eliminar -->
+    <input type="hidden" asp-for="Id" />
+
+    <p>
+        <input type="submit" value="Confirmar Eliminación" /> |
+        <a asp-action="Index">Cancelar y volver a la lista</a>
+    </p>
+</form>

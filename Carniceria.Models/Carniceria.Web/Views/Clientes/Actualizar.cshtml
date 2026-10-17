@@ -1,16 +1,20 @@
-﻿@model Carniceria.Models.Cliente
+﻿<!-- Conectamos con el modelo Cliente para cargar sus datos -->
+@model Carniceria.Models.Cliente
 
 @{
+    <!-- Título de la pestaña -->
     ViewData["Title"] = "Actualizar Cliente";
 }
 
 <h2>Actualizar Información del Cliente</h2>
 
+<!-- Formulario que manda los datos modificados al controlador -->
 <form asp-action="Actualizar" method="post">
 
-    
+    <!-- Mandamos el ID oculto para saber a quién estamos editando y no crear uno nuevo -->
     <input type="hidden" asp-for="Id" />
 
+    <!-- Lista desplegable para el tipo de cédula o pasaporte -->
     <div style="margin-bottom: 15px;">
         <label asp-for="TipoIdentificacion" style="font-weight: bold;"></label><br />
         <select asp-for="TipoIdentificacion" style="padding: 5px; width: 100%; max-width: 300px;">
@@ -19,9 +23,11 @@
             <option value="DIMEX">DIMEX</option>
             <option value="Pasaporte">Pasaporte</option>
         </select>
+        <!-- Espacio para mostrar el error en rojo si lo dejan vacío -->
         <span asp-validation-for="TipoIdentificacion" style="color: red;"></span>
     </div>
 
+    <!-- Cajas de texto precargadas con los datos actuales del cliente -->
     <div style="margin-bottom: 15px;">
         <label asp-for="Identificacion" style="font-weight: bold;"></label><br />
         <input asp-for="Identificacion" style="padding: 5px; width: 100%; max-width: 300px;" />

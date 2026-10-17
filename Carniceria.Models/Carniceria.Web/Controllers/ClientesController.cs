@@ -29,6 +29,11 @@ namespace Carniceria.Web.Controllers
         public IActionResult Create(Cliente clienteNuevo)
         {
             //Validaciones clase Cliente
+            bool existe = listaClientes.Any(c => c.Identificacion == clienteNuevo.Identificacion);
+            if (existe)
+            {
+                ModelState.AddModelError("Identificacion", "Ya existe un cliente con esa identificación");
+            }
             if (ModelState.IsValid)
             {
                 clienteNuevo.Id = Guid.NewGuid();

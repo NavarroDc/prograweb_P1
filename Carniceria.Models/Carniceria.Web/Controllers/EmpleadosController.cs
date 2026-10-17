@@ -82,5 +82,30 @@ namespace Carniceria.Web.Controllers
             }
             return View(empleadoActualizado);
         }
+
+        //ELIMINAR EMPLEADO (GET)
+        //Muestra la pantalla de confirmación con los datos
+        public IActionResult Eliminar(Guid id)
+        {
+            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
+            if(empleado == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(empleado);
+        }
+
+        //(POST) Ejecuta el borrado 
+        [HttpPost]
+        public IActionResult EliminarConfirmado(Guid id)
+        {
+            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
+            if(empleado != null)
+            {
+                _empleados.Remove(empleado);
+                TempData["MensajeExito"] = "Empleado eliminado del sistema";
+            }
+            return RedirectToAction("Index");
+        }
     }   
 }

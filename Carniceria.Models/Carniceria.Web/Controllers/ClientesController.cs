@@ -84,6 +84,11 @@ namespace Carniceria.Web.Controllers
         [HttpPost]
         public IActionResult Actualizar (Cliente clienteActualizado)
         {
+            bool existe = listaClientes.Any(c => c.Identificacion == clienteActualizado.Identificacion && c.Id != clienteActualizado.Id);
+            if (existe)
+            {
+                ModelState.AddModelError("Identificacion", "Otro cliente ya tiene esta identificación");
+            }
             if (ModelState.IsValid)
             {
                 var index = listaClientes.FindIndex(c => c.Id == clienteActualizado.Id);

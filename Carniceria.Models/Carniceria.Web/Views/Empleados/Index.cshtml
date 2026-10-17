@@ -1,5 +1,70 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Carniceria.Models.Empleado>
+
 @{
+    ViewData["Title"] = "Listado de Empleados";
 }
+
+<h2>Listado de Empleados</h2>
+
+<!-- Enlaces simples de navegación superior -->
+<p>
+    <a asp-action="Create">Registrar Nuevo Empleado</a> |
+    <a asp-action="Buscar">Ir a Buscar Empleado</a>
+</p>
+
+<!-- Mensaje de éxito si lo hay  -->
+@if (TempData["MensajeExito"] != null)
+{
+    <p style="color: green;">
+        @TempData["MensajeExito"]
+    </p>
+}
+
+<!-- Tabla principal con bordes simples -->
+<table class="table" border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th>Id Interno</th>
+            <th>Tipo de identificación</th>
+            <th>Identificación</th>
+            <th>Nombre</th>
+            <th>Primer apellido</th>
+            <th>Segundo apellido</th>
+            <th>Fecha de nacimiento</th>
+            <th>Área de Trabajo</th>
+            <th>Puesto</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Verificamos si la lista está vacía -->
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="10">Aún no hay empleados registrados en el sistema.</td>
+            </tr>
+        }
+        else
+        {
+            <!-- Dibujamos cada fila -->
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TipoIdentificacion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Identificacion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PrimerApellido)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SegundoApellido)</td>
+                    <td>@item.FechaNacimiento.ToShortDateString()</td>
+                    <td>@Html.DisplayFor(modelItem => item.AreaTrabajo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Puesto)</td>
+                    <td>
+                        <a asp-action="Actualizar" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

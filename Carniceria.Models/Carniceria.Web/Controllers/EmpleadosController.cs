@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 
 namespace Carniceria.Web.Controllers
@@ -19,14 +20,14 @@ namespace Carniceria.Web.Controllers
             return View(_empleados);
         }
 
-        //CREAR (GET)
+        //CREAR EMPLEADO (GET)
         //Muestra el formulario en blanco
         public IActionResult Create()
         {
             return View();
         }
 
-        //CREAR POST
+        //CREAR EMPLEADO POST
         //Recibe los datos, valida y guarda
         [HttpPost]
         public IActionResult Create(Empleado nuevoEmpleado)
@@ -45,6 +46,41 @@ namespace Carniceria.Web.Controllers
                 return RedirectToAction("Index");
             }
             return View(nuevoEmpleado);//Devuelve al formulario si hay error
+        }
+
+        //ACTUALIZAR EMPLEADO(GET)
+        //Busca al empleado por ID y muestra el formulario lleno
+        public IActionResult Actualizar(Guid id)
+        {
+            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
+            if(empleado == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(empleado);
+        }
+
+        //[POST]Remplazo los datos del empleado en la lista de empleados
+        [HttpPost]
+        public IActionResult Actualizar(Empleado empleadoActualizado)
+        {
+            bool existe = _empleados.Any(e => e.Identificacion == empleadoActualizado.Identificacion && e.Id != empleadoActualizado.Id);
+            if (existe)
+            {
+                ModelState.AddModelError("Identificacion", "Ya existe otra persona con esta identificación");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var index = _empleados.FindIndex(e => e.Id == empleadoActualizado.Id);
+                if (index != -1)
+                {
+                    _empleados[index] = empleadoActualizado;
+                    TempData["MensajeExisto"] = "Datos del empleado actualizados correctamente";
+                    return RedirectToAction("Index");
+                }
+            }
+            return View(empleadoActualizado);
         }
     }   
 }

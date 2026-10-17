@@ -8,11 +8,12 @@ namespace Carniceria.Models
     public class Empleado : Persona
     {
         [Required(ErrorMessage = "Debe escribir el salario mensual...")]
-        [Range(0, 5000000, ErrorMessage = "El salario debe ser un monto entre ₡0 y ₡5000000")]
-        [Display(Name = "Salario mensual")]
+        [Range(0, 5000000, ErrorMessage = "El salario debe ser un monto entre ₡0 y ₡5 000 000")]
+        [Display(Name = "Salario mensual (₡)")]
         public decimal SalarioMensual { get; set; }
 
         [Required(ErrorMessage = "Debe escribir la fecha de ingreso...")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de ingreso")]
         public DateTime FechaIngreso { get; set; }

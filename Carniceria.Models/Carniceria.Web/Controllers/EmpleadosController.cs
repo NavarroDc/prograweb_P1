@@ -107,5 +107,34 @@ namespace Carniceria.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        //BUSCAR(GET)
+        //Muestra la pantalla de búsqueda con la caja de texto
+        public IActionResult Buscar()
+        {
+            return View();
+        }
+
+        //POST 
+        //Procesa la búsqueda por identificación
+        [HttpPost]
+        public IActionResult Buscar(string identificacion)
+        {
+            if (string.IsNullOrWhiteSpace(identificacion))
+            {
+                ViewBag.Mensaje = "Debe ingresar una identificación para poder buscar un empleado";
+                return View();
+            }
+
+            var empleado = _empleados.FirstOrDefault(e => e.Identificacion == identificacion);
+
+            if (empleado == null)
+            {
+                ViewBag.Mensaje = "No se encontraron empleados con esa identificación";
+                return View();
+            }
+
+            return View(empleado);
+        }
     }   
 }

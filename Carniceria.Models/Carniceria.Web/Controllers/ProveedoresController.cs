@@ -90,5 +90,31 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        //BUSCAR PROVEEDORES GET
+        [HttpGet]
+        public IActionResult Buscar()
+        {
+            return View();
+        }
+
+        //BUSCAR PROVEEDORES POST
+        [HttpPost]
+        public IActionResult Buscar(string identificacion)
+        {
+            if (string.IsNullOrWhiteSpace(identificacion))
+            {
+                ViewBag.Mensaje = "Ingrese el código para buscar un proveedor";
+                return View();
+            }
+
+            var proveedor = listaProveedores.FirstOrDefault(p => p.Identificacion == identificacion); 
+            
+            if(proveedor == null)
+            {
+                ViewBag.Mensaje = "No se encontraron proveedores con la identificación ingresada";
+                return View();
+            }
+            return View(proveedor);
+        }
     }
 }

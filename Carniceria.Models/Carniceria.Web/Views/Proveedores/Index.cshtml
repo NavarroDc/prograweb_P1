@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Carniceria.Models.Proveedor>
+
+@{
+    ViewData["Title"] = "Directorio de Proveedores";
+}
+
+<h2>Directorio de Proveedores</h2>
+<hr />
+
+<!-- Botón para registrar un nuevo proveedor -->
+<p style="margin-bottom: 20px;">
+    <a asp-action="Create" style="background-color: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        Registrar Nuevo Proveedor
+    </a>
+</p>
+
+<!-- Alerta visual cuando se completa una acción -->
+@if (TempData["MensajeExito"] != null)
+{
+    <div style="background-color: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; margin-bottom: 20px; border-radius: 4px;">
+        <strong>Éxito:</strong> @TempData["MensajeExito"]
+    </div>
+}
+
+<!-- Contenedor responsivo para tabla con muchas columnas -->
+<div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;">
+        <thead>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <!-- Todas las propiedades de la entidad Proveedor[cite: 8, 9] -->
+                <th style="padding: 10px; border: 1px solid #ddd;">ID Interno</th>
+                <!-- TIPO DE IDENTIFICACIÓN AÑADIDO AQUÍ -->
+                <th style="padding: 10px; border: 1px solid #ddd;">Tipo ID</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Identificación</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Razón Social</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Contacto</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Teléfono</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Correo</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Suministro</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Frecuencia</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <!-- Columna del código Guid generado automáticamente[cite: 8, 9] -->
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace; font-size: 0.8em; color: #555;">@item.Id</td>
+
+                        <!-- TIPO DE IDENTIFICACIÓN AÑADIDO AQUÍ -->
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.TipoIdentificacion)</td>
+
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.Identificacion)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.RazonSocial)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.PersonaContacto)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.Telefono)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.CorreoElectronico)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.TipoSuministro)</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.FrecuenciaEntrega)</td>
+
+                        <!-- Botones de acción directos -->
+                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center; white-space: nowrap;">
+                            <a asp-action="Actualizar" asp-route-id="@item.Id" style="color: #ffc107; font-weight: bold; text-decoration: none; margin-right: 5px;">Editar</a> |
+                            <a asp-action="Eliminar" asp-route-id="@item.Id" style="color: #dc3545; font-weight: bold; text-decoration: none; margin-left: 5px;">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10" style="text-align: center; padding: 25px; border: 1px solid #ddd; color: #666;">
+                        No hay proveedores registrados en el sistema actualmente.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -93,7 +93,7 @@ namespace Carniceria.Web.Controllers
         public IActionResult EliminarConfirmado(Guid id) 
         {
             var producto = listaProductos.FirstOrDefault(p => p.Id == id);
-            if(producto == null)
+            if(producto != null)
             {
                 listaProductos.Remove(producto);
                 TempData["MensajeExito"] = "Producto eliminado correctamente del inventario";

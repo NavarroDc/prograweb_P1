@@ -1,0 +1,48 @@
+﻿@model Carniceria.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<h2 style="color: red;">¡Atención! Confirmar Eliminación</h2>
+<hr />
+
+<p style="font-weight: bold; color: darkred;">¿Está completamente seguro de que desea eliminar este producto del inventario?</p>
+<p>Esta acción es permanente y no se puede deshacer.</p>
+
+<!-- Resumen de los datos del producto a eliminar -->
+<div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+    <h4>Detalles del Producto</h4>
+    <hr />
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.CodigoProducto)</dt>
+        <dd>@Html.DisplayFor(model => model.CodigoProducto)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.NombreProducto)</dt>
+        <dd>@Html.DisplayFor(model => model.NombreProducto)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Categoria)</dt>
+        <dd>@Html.DisplayFor(model => model.Categoria)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.UnidadMedida)</dt>
+        <dd>@Html.DisplayFor(model => model.UnidadMedida)</dd>
+
+        <!-- Formato de moneda para visualizar el precio antes de borrar -->
+        <dt>@Html.DisplayNameFor(model => model.PrecioUnidadMedida)</dt>
+        <dd>@Model.PrecioUnidadMedida.ToString("C")</dd>
+
+        <dt>Existencia Registrada</dt>
+        <dd>@Html.DisplayFor(model => model.ExistenciaActual) @Html.DisplayFor(model => model.UnidadMedida)</dd>
+    </dl>
+</div>
+
+<form action="/Productos/EliminarConfirmado" method="post" style="margin-top: 20px;">
+    <!-- Campo oculto que asegura el envío del ID correcto -->
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <button type="submit" style="background-color: red; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+        Sí, Eliminar Producto
+    </button>
+    <span style="margin: 0 10px;">|</span>
+    <a asp-action="Index">Cancelar y volver al inventario</a>
+</form>

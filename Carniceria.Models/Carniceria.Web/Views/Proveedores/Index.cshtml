@@ -4,7 +4,7 @@
     ViewData["Title"] = "Directorio de Proveedores";
 }
 
-<!-- Encabezado principal igual al de Productos -->
+
 <h2>Directorio de Proveedores</h2>
 
 <!-- Enlaces simples de acción superior -->
@@ -13,7 +13,7 @@
     <a asp-action="Buscar">Ir a Buscar Proveedor</a>
 </p>
 
-<!-- Alerta de éxito con clases nativas de Bootstrap -->
+<!-- Alerta de éxito -->
 @if (TempData["MensajeExito"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -24,7 +24,7 @@
 
 <!-- Contenedor para que la tabla sea responsiva si hay muchas columnas -->
 <div class="table-responsive">
-    <!-- Uso de las clases de Bootstrap para la tabla (igual a la imagen) -->
+    
     <table class="table table-bordered table-striped table-hover mt-3">
         <thead class="table-light">
             <tr>
@@ -57,7 +57,7 @@
                         <td>@Html.DisplayFor(modelItem => item.TipoSuministro)</td>
                         <td>@Html.DisplayFor(modelItem => item.FrecuenciaEntrega)</td>
 
-                        <!-- Enlaces de acción simples y en negrita como en tu imagen -->
+                        <!-- Enlaces de acción  -->
                         <td class="text-center">
                             <a asp-action="Actualizar" asp-route-id="@item.Id" class="text-dark fw-bold text-decoration-none">Editar</a> |
                             <a asp-action="Eliminar" asp-route-id="@item.Id" class="text-dark fw-bold text-decoration-none">Eliminar</a>

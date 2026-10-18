@@ -11,11 +11,13 @@ namespace Carniceria.Models
 
         [Required(ErrorMessage = "Debe escribir el código del producto...")]
         [StringLength(20, MinimumLength = 1, ErrorMessage = "El código del producto debe tener entre 1 y 20 caracteres")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "El código del producto solo debe tener letras y números sin espacios")]
         [Display(Name = "Código del producto")]
         public string CodigoProducto { get; set; }
 
         [Required(ErrorMessage = "Debe escribir el nombre del producto...")]
         [StringLength(80, MinimumLength = 3, ErrorMessage = "El nombre del producto debe tener entre 3 y 80 caracteres")]
+        [RegularExpression(@"^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El nombre solo permite caracteres alfanuméricos y espacios.")]
         [Display(Name = "Nombre del producto")]
         public string NombreProducto { get; set; }
 

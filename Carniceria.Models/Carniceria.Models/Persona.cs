@@ -35,6 +35,3 @@ namespace Carniceria.Models
         public DateTime FechaNacimiento { get; set; }
     }
 }
-
-
-

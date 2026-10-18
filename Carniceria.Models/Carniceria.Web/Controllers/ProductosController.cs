@@ -105,31 +105,29 @@ namespace Carniceria.Web.Controllers
         [HttpGet]
         public IActionResult Buscar()
         {
-            return View(new List<Producto>());
+            return View();
         }
 
         //BUSCAR PRODUCTO (POST)
         [HttpPost]
-        public IActionResult Buscar(string productoBusqueda)
+        public IActionResult Buscar(string codigoProducto)
         {
-            if (string.IsNullOrWhiteSpace(productoBusqueda))
+            if (string.IsNullOrWhiteSpace(codigoProducto))
             {
                 ViewBag.Mensaje = "Ingrese el código o el nombre para buscar un producto";
-                return View(new List<Producto>());
+                return View();
             }
 
             //Búsqueda de productos por coincidencia
-            var resultados = listaProductos.Where(p =>
-                (p.CodigoProducto != null && p.CodigoProducto.Equals(productoBusqueda, StringComparison.OrdinalIgnoreCase)) ||
-                (p.NombreProducto != null && p.NombreProducto.Contains(productoBusqueda, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
+            var producto = listaProductos.FirstOrDefault(p => p.CodigoProducto == codigoProducto);
 
-            if (!resultados.Any())
+            if(producto == null)
             {
-                ViewBag.Mensaje = "No se encontraron coincidencias en el inventario";
+                ViewBag.Mensaje = "No se encontraron productos con el código ingresado";
+                return View();
             }
 
-            return View(resultados);
+            return View(producto);
         }
     }
 }

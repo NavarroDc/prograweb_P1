@@ -7,7 +7,7 @@
 
 <h2>Directorio de Proveedores</h2>
 
-<!-- Enlaces simples de acción superior -->
+<!-- Enlaces simples -->
 <p>
     <a asp-action="Create">Registrar Nuevo Proveedor</a> |
     <a asp-action="Buscar">Ir a Buscar Proveedor</a>
@@ -22,7 +22,7 @@
     </div>
 }
 
-<!-- Contenedor para que la tabla sea responsiva si hay muchas columnas -->
+<!-- Contenedor  -->
 <div class="table-responsive">
     
     <table class="table table-bordered table-striped table-hover mt-3">
@@ -46,7 +46,7 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <!-- ID mostrado en formato pequeño -->
+                        <!-- Mostrar ID -->
                         <td><small class="text-muted">@item.Id</small></td>
                         <td>@Html.DisplayFor(modelItem => item.TipoIdentificacion)</td>
                         <td>@Html.DisplayFor(modelItem => item.Identificacion)</td>

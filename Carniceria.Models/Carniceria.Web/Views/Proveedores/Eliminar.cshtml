@@ -1,0 +1,51 @@
+﻿@model Carniceria.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Eliminar Proveedor";
+}
+
+<h2>Eliminar Proveedor</h2>
+<hr />
+
+<h3 style="color: #dc3545; margin-bottom: 20px;">¿Está seguro de que desea eliminar este proveedor?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Código Interno (ID)</dt>
+        <dd class="col-sm-9 text-muted">@Model.Id</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TipoIdentificacion)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TipoIdentificacion)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Identificacion)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Identificacion)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.RazonSocial)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.RazonSocial)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PersonaContacto)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PersonaContacto)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Telefono)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CorreoElectronico)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CorreoElectronico)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TipoSuministro)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TipoSuministro)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FrecuenciaEntrega)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.FrecuenciaEntrega)</dd>
+    </dl>
+
+   
+    <form asp-action="EliminarConfirmado" method="post" style="margin-top: 25px;">
+
+        <!-- Se envía el Guid id al controlador -->
+        <input type="hidden" asp-for="Id" />
+
+        <input type="submit" value="Eliminar Proveedor" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver al inventario</a>
+    </form>
+</div>

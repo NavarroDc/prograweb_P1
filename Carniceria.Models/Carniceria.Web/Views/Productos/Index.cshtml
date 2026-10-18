@@ -6,7 +6,7 @@
 
 <h2>Inventario de Productos</h2>
 
-<!-- Enlaces principales de navegación del módulo -->
+<!-- Enlaces principales -->
 <p>
     <a asp-action="Create">Registrar Nuevo Producto</a> |
     <a asp-action="Buscar">Ir a Buscar Producto</a>
@@ -44,7 +44,7 @@
         {
             foreach (var item in Model)
             {
-                <!-- Evaluación de existencias para aplicar formato condicional de alerta -->
+                <!-- Evaluación de existencias -->
                 string colorFila = "";
                 if (item.ExistenciaActual <= item.ExistenciaMinima)
                 {

@@ -1,0 +1,75 @@
+﻿@model Carniceria.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Buscar Proveedor";
+}
+
+<h2>Buscar Proveedor en Directorio</h2>
+<hr />
+
+<!-- Formulario para ingresar el término de búsqueda -->
+<div style="margin-bottom: 30px;">
+    <form asp-action="Buscar" method="post">
+        <p>
+            <label style="font-weight: bold;">Ingrese la Identificación del Proveedor:</label><br />
+            
+            <input type="text" name="terminoBusqueda" required style="padding: 5px; width: 300px;" placeholder="Ej: 1-1111-0909" />
+            <input type="submit" value="Buscar" />
+        </p>
+    </form>
+</div>
+
+<!-- Muestra el mensaje de error si el proveedor no existe -->
+@if (ViewBag.Mensaje != null)
+{
+    <p style="color: red; font-weight: bold;">
+        @ViewBag.Mensaje
+    </p>
+}
+
+<!-- Si el controlador encuentra el proveedor y lo envía, se muestran todos sus datos -->
+@if (Model != null)
+{
+    <div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
+        <h4 style="margin-top: 0;">Proveedor Encontrado</h4>
+        <hr />
+        <dl>
+            <dt>Código Interno (ID)</dt>
+            <dd>@Model.Id</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.TipoIdentificacion)</dt>
+            <dd>@Html.DisplayFor(model => model.TipoIdentificacion)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.Identificacion)</dt>
+            <dd>@Html.DisplayFor(model => model.Identificacion)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.RazonSocial)</dt>
+            <dd>@Html.DisplayFor(model => model.RazonSocial)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.PersonaContacto)</dt>
+            <dd>@Html.DisplayFor(model => model.PersonaContacto)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.Telefono)</dt>
+            <dd>@Html.DisplayFor(model => model.Telefono)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.CorreoElectronico)</dt>
+            <dd>@Html.DisplayFor(model => model.CorreoElectronico)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.TipoSuministro)</dt>
+            <dd>@Html.DisplayFor(model => model.TipoSuministro)</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.FrecuenciaEntrega)</dt>
+            <dd>@Html.DisplayFor(model => model.FrecuenciaEntrega)</dd>
+        </dl>
+
+        <!-- Botones directos para afectar al proveedor buscado -->
+        <p style="margin-top: 15px;">
+            <a asp-action="Actualizar" asp-route-id="@Model.Id">Editar Datos</a> |
+            <a asp-action="Eliminar" asp-route-id="@Model.Id">Eliminar Proveedor</a>
+        </p>
+    </div>
+}
+
+<p style="margin-top: 30px;">
+    <a asp-action="Index">Volver al Directorio</a>
+</p>

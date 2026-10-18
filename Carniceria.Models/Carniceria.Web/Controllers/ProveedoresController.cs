@@ -107,19 +107,19 @@ namespace Carniceria.Web.Controllers
 
         //BUSCAR PROVEEDORES POST
         [HttpPost]
-        public IActionResult Buscar(string identificacion)
+        public IActionResult Buscar(string terminoBusqueda)
         {
-            if (string.IsNullOrWhiteSpace(identificacion))
+            if (string.IsNullOrWhiteSpace(terminoBusqueda))
             {
-                ViewBag.Mensaje = "Ingrese el código para buscar un proveedor";
+                ViewBag.Mensaje = "Ingrese la identificación o razón social para buscar un proveedor";
                 return View();
             }
 
-            var proveedor = listaProveedores.FirstOrDefault(p => p.Identificacion == identificacion); 
+            var proveedor = listaProveedores.FirstOrDefault(p => p.Identificacion == terminoBusqueda || p.RazonSocial == terminoBusqueda); 
             
             if(proveedor == null)
             {
-                ViewBag.Mensaje = "No se encontraron proveedores con la identificación ingresada";
+                ViewBag.Mensaje = "No se encontraron proveedores con los datos ingresados";
                 return View();
             }
             return View(proveedor);

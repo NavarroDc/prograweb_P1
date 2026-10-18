@@ -1,0 +1,79 @@
+﻿@model Carniceria.Models.Producto
+
+@{
+    ViewData["Title"] = "Registrar Producto";
+}
+
+<h2>Registrar Nuevo Producto</h2>
+<hr />
+
+<form asp-action="Create" method="post">
+
+    <p>
+        <!-- Enlazado con CodigoProducto -->
+        <label asp-for="CodigoProducto"></label><br />
+        <input asp-for="CodigoProducto" />
+        <span asp-validation-for="CodigoProducto" style="color: red;"></span>
+    </p>
+
+    <p>
+        <!-- Enlazado con NombreProducto -->
+        <label asp-for="NombreProducto"></label><br />
+        <input asp-for="NombreProducto" />
+        <span asp-validation-for="NombreProducto" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="Categoria"></label><br />
+        <select asp-for="Categoria">
+            <option value="">-- Seleccione una categoría --</option>
+            <option value="Carne de Res">Carne de Res</option>
+            <option value="Carne de Cerdo">Carne de Cerdo</option>
+            <option value="Pollo">Pollo</option>
+            <option value="Embutidos">Embutidos</option>
+            <option value="Productos Procesados">Productos Procesados</option>
+            <option value="Congelados">Congelados</option>
+            <option value="Otros">Otros</option>
+        </select>
+        <span asp-validation-for="Categoria" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="UnidadMedida"></label><br />
+        <select asp-for="UnidadMedida">
+            <option value="">-- Seleccione unidad --</option>
+            <option value="Kilogramo">Kilogramo</option>
+            <option value="Libra">Libra</option>
+            <option value="Unidad">Unidad</option>
+            <option value="Paquete">Paquete</option>
+            <option value="Bandeja">Bandeja</option>
+        </select>
+        <span asp-validation-for="UnidadMedida" style="color: red;"></span>
+    </p>
+
+    <p>
+        <!-- Enlazado con PrecioUnidadMedida -->
+        <label asp-for="PrecioUnidadMedida"></label><br />
+        <input asp-for="PrecioUnidadMedida" type="number" step="0.01" />
+        <span asp-validation-for="PrecioUnidadMedida" style="color: red;"></span>
+    </p>
+
+    <p>
+        
+        <label asp-for="ExistenciaActual"></label><br />
+        <input asp-for="ExistenciaActual" type="number" step="0.01" />
+        <span asp-validation-for="ExistenciaActual" style="color: red;"></span>
+    </p>
+
+    <p>
+        <label asp-for="ExistenciaMinima"></label><br />
+        <input asp-for="ExistenciaMinima" type="number" step="0.01" />
+        <span asp-validation-for="ExistenciaMinima" style="color: red;"></span>
+    </p>
+
+    <p>
+        <input type="submit" value="Guardar Producto" /> |
+        <a asp-action="Index">Volver al inventario</a>
+    </p>
+
+</form>

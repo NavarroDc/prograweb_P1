@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Carniceria.Models.Producto>
+
+@{
+    ViewData["Title"] = "Inventario de Productos";
+}
+
+<h2>Inventario de Productos</h2>
+
+<p>
+    <a asp-action="Create">Registrar Nuevo Producto</a> |
+    <a asp-action="Buscar">Ir a Buscar Producto</a>
+</p>
+
+@if (TempData["MensajeExito"] != null)
+{
+    <p style="color: green;">
+        @TempData["MensajeExito"]
+    </p>
+}
+
+<table class="table" border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre del Producto</th>
+            <th>Categoría</th>
+            <th>Unidad de medida</th>
+            <th>Precio Unitario</th>
+            <th>Existencia Actual</th>
+            <th>Existencia Mínima</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="8">Aún no hay productos registrados en el inventario.</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <!-- Evaluamos si hay que pintar la fila de rojo por bajo inventario -->
+                string colorFila = "";
+                if (item.ExistenciaActual <= item.ExistenciaMinima)
+                {
+                    colorFila = "background-color: #ffe6e6;";
+                }
+
+                <tr style="@colorFila">
+                    <td>@Html.DisplayFor(modelItem => item.CodigoProducto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.NombreProducto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Categoria)</td>
+                    <td>@Html.DisplayFor(modelItem => item.UnidadMedida)</td>
+                    <td>@item.PrecioUnidadMedida.ToString("C")</td>
+
+                    <!-- Formateamos para que muestre la medida junto al número (ejemplo: 10 Kilogramo) -->
+                    <td>
+                        @item.ExistenciaActual @item.UnidadMedida
+                        @if (item.ExistenciaActual <= item.ExistenciaMinima)
+                        {
+                            <span style="color: red; font-weight: bold; margin-left: 5px;">[¡ALERTA STOCK BAJO!]</span>
+                        }
+                    </td>
+
+                    <td>@item.ExistenciaMinima @item.UnidadMedida</td>
+                    <td>
+                        <a asp-action="Actualizar" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -27,7 +27,7 @@ namespace Carniceria.Models
 
         [Required(ErrorMessage = "Debe seleccionar la unidad de medida del producto...")]
         [Display(Name = "Unidad de medida")]
-        public string UnidadMedidad { get; set; }
+        public string UnidadMedida { get; set; }
 
         [Required(ErrorMessage = "Debe escribir el precio de por la unidad de medida...")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0 o un valor válido...")]

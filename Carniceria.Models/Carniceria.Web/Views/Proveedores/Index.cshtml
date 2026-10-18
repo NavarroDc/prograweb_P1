@@ -4,41 +4,40 @@
     ViewData["Title"] = "Directorio de Proveedores";
 }
 
+<!-- Encabezado principal igual al de Productos -->
 <h2>Directorio de Proveedores</h2>
-<hr />
 
-<!-- Botón para registrar un nuevo proveedor -->
-<p style="margin-bottom: 20px;">
-    <a asp-action="Create" style="background-color: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-        Registrar Nuevo Proveedor
-    </a>
+<!-- Enlaces simples de acción superior -->
+<p>
+    <a asp-action="Create">Registrar Nuevo Proveedor</a> |
+    <a asp-action="Buscar">Ir a Buscar Proveedor</a>
 </p>
 
-<!-- Alerta visual cuando se completa una acción -->
+<!-- Alerta de éxito con clases nativas de Bootstrap -->
 @if (TempData["MensajeExito"] != null)
 {
-    <div style="background-color: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; margin-bottom: 20px; border-radius: 4px;">
-        <strong>Éxito:</strong> @TempData["MensajeExito"]
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["MensajeExito"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<!-- Contenedor responsivo para tabla con muchas columnas -->
-<div style="overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;">
-        <thead>
-            <tr style="background-color: #f2f2f2; text-align: left;">
-                <!-- Todas las propiedades de la entidad Proveedor[cite: 8, 9] -->
-                <th style="padding: 10px; border: 1px solid #ddd;">ID Interno</th>
-                <!-- TIPO DE IDENTIFICACIÓN AÑADIDO AQUÍ -->
-                <th style="padding: 10px; border: 1px solid #ddd;">Tipo ID</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Identificación</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Razón Social</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Contacto</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Teléfono</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Correo</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Suministro</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Frecuencia</th>
-                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Acciones</th>
+<!-- Contenedor para que la tabla sea responsiva si hay muchas columnas -->
+<div class="table-responsive">
+    <!-- Uso de las clases de Bootstrap para la tabla (igual a la imagen) -->
+    <table class="table table-bordered table-striped table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Código (ID)</th>
+                <th>Tipo de Identificación</th>
+                <th>Identificación</th>
+                <th>Razón Social</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Suministro</th>
+                <th>Frecuencia</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -47,24 +46,21 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <!-- Columna del código Guid generado automáticamente[cite: 8, 9] -->
-                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace; font-size: 0.8em; color: #555;">@item.Id</td>
+                        <!-- ID mostrado en formato pequeño -->
+                        <td><small class="text-muted">@item.Id</small></td>
+                        <td>@Html.DisplayFor(modelItem => item.TipoIdentificacion)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Identificacion)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RazonSocial)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PersonaContacto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CorreoElectronico)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TipoSuministro)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FrecuenciaEntrega)</td>
 
-                        <!-- TIPO DE IDENTIFICACIÓN AÑADIDO AQUÍ -->
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.TipoIdentificacion)</td>
-
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.Identificacion)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.RazonSocial)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.PersonaContacto)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.Telefono)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.CorreoElectronico)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.TipoSuministro)</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@Html.DisplayFor(modelItem => item.FrecuenciaEntrega)</td>
-
-                        <!-- Botones de acción directos -->
-                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center; white-space: nowrap;">
-                            <a asp-action="Actualizar" asp-route-id="@item.Id" style="color: #ffc107; font-weight: bold; text-decoration: none; margin-right: 5px;">Editar</a> |
-                            <a asp-action="Eliminar" asp-route-id="@item.Id" style="color: #dc3545; font-weight: bold; text-decoration: none; margin-left: 5px;">Eliminar</a>
+                        <!-- Enlaces de acción simples y en negrita como en tu imagen -->
+                        <td class="text-center">
+                            <a asp-action="Actualizar" asp-route-id="@item.Id" class="text-dark fw-bold text-decoration-none">Editar</a> |
+                            <a asp-action="Eliminar" asp-route-id="@item.Id" class="text-dark fw-bold text-decoration-none">Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -72,8 +68,8 @@
             else
             {
                 <tr>
-                    <td colspan="10" style="text-align: center; padding: 25px; border: 1px solid #ddd; color: #666;">
-                        No hay proveedores registrados en el sistema actualmente.
+                    <td colspan="10">
+                        Aún no hay proveedores registrados en el directorio.
                     </td>
                 </tr>
             }

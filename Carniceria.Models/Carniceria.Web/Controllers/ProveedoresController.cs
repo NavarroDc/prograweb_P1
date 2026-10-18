@@ -28,11 +28,15 @@ namespace Carniceria.Web.Controllers
         [HttpPost]
         public IActionResult Create(Proveedor proveedor)
         {
-            proveedor.Id = Guid.NewGuid();
-            listaProveedores.Add(proveedor);
-            TempData["MensajeExito"] = "Proveedor registrado correctamente";
+            if (ModelState.IsValid)
+            {
+                proveedor.Id = Guid.NewGuid();
+                listaProveedores.Add(proveedor);
+                TempData["MensajeExito"] = "Proveedor registrado correctamente";
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            return View(proveedor);
         }
 
         //ACTUALIZAR PROVEEDORES GET
@@ -52,15 +56,19 @@ namespace Carniceria.Web.Controllers
         [HttpPost]
         public IActionResult Actualizar(Proveedor proveedor)
         {
-            var index = listaProveedores.FindIndex(p => p.Id == proveedor.Id);
-
-            if(index != -1)
+            if (ModelState.IsValid)
             {
-                listaProveedores[index] = proveedor;
-                TempData["MensajeExito"] = "El proveedor se actualizó correctamente";
-            }
+                var index = listaProveedores.FindIndex(p => p.Id == proveedor.Id);
 
-            return RedirectToAction("Index");
+                if (index != -1)
+                {
+                    listaProveedores[index] = proveedor;
+                    TempData["MensajeExito"] = "El proveedor se actualizó correctamente";
+                }
+
+                return RedirectToAction("Index");
+            }
+            return View(proveedor);
         }
 
         //ELIMINAR PROVEEDORES GET

@@ -6,11 +6,13 @@
 
 <h2>Inventario de Productos</h2>
 
+<!-- Enlaces principales de navegación del módulo -->
 <p>
     <a asp-action="Create">Registrar Nuevo Producto</a> |
     <a asp-action="Buscar">Ir a Buscar Producto</a>
 </p>
 
+<!-- Despliegue de alertas de éxito tras operaciones CRUD -->
 @if (TempData["MensajeExito"] != null)
 {
     <p style="color: green;">
@@ -42,7 +44,7 @@
         {
             foreach (var item in Model)
             {
-                <!-- Evaluamos si hay que pintar la fila de rojo por bajo inventario -->
+                <!-- Evaluación de existencias para aplicar formato condicional de alerta -->
                 string colorFila = "";
                 if (item.ExistenciaActual <= item.ExistenciaMinima)
                 {
@@ -54,9 +56,11 @@
                     <td>@Html.DisplayFor(modelItem => item.NombreProducto)</td>
                     <td>@Html.DisplayFor(modelItem => item.Categoria)</td>
                     <td>@Html.DisplayFor(modelItem => item.UnidadMedida)</td>
+
+                    <!-- Formato de moneda para el precio -->
                     <td>@item.PrecioUnidadMedida.ToString("C")</td>
 
-                    <!-- Formateamos para que muestre la medida junto al número (ejemplo: 10 Kilogramo) -->
+                    <!-- Concatenación de la cantidad con su unidad de medida respectiva -->
                     <td>
                         @item.ExistenciaActual @item.UnidadMedida
                         @if (item.ExistenciaActual <= item.ExistenciaMinima)

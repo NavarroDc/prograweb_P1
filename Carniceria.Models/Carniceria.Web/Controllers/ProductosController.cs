@@ -100,6 +100,36 @@ namespace Carniceria.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-   
+
+        //BUSCAR PRODUCTO (GET)
+        [HttpGet]
+        public IActionResult Buscar()
+        {
+            return View(new List<Producto>());
+        }
+
+        //BUSCAR PRODUCTO (POST)
+        [HttpPost]
+        public IActionResult Buscar(string productoBusqueda)
+        {
+            if (string.IsNullOrWhiteSpace(productoBusqueda))
+            {
+                ViewBag.Mensaje = "Ingrese el código o el nombre para buscar un producto";
+                return View(new List<Producto>());
+            }
+
+            //Búsqueda de productos por coincidencia
+            var resultados = listaProductos.Where(p =>
+                (p.CodigoProducto != null && p.CodigoProducto.Equals(productoBusqueda, StringComparison.OrdinalIgnoreCase)) ||
+                (p.NombreProducto != null && p.NombreProducto.Contains(productoBusqueda, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+
+            if (!resultados.Any())
+            {
+                ViewBag.Mensaje = "No se encontraron coincidencias en el inventario";
+            }
+
+            return View(resultados);
+        }
     }
 }

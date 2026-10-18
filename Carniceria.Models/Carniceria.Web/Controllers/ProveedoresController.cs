@@ -63,5 +63,32 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        //ELIMINAR PROVEEDORES GET
+        [HttpGet]
+        public IActionResult Eliminar(Guid id)
+        {
+            var proveedor = listaProveedores.FirstOrDefault(p => p.Id == id);
+
+            if(proveedor == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(proveedor);
+        }
+
+        //ELIMINAR PROVEEDORES POST
+        [HttpPost]
+        public IActionResult EliminarConfirmado(Guid id)
+        {
+            var proveedor = listaProveedores.FirstOrDefault(p => p.Id == id);
+
+            if(proveedor != null)
+            {
+                listaProveedores.Remove(proveedor);
+                TempData["MensajeExito"] = "El proveedor se eliminó correctamente";
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }

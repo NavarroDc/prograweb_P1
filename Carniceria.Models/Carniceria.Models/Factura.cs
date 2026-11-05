@@ -32,7 +32,7 @@ namespace Carniceria.Models
         public List<DetalleFactura> Detalles { get; set; } = new List<DetalleFactura>();
 
         //Cálculos autumáticos
-        public decimal Subtotal => Detalles.Sum(d => d.SubtotalLinea) ?? 0;//Suma subtotales todas las líneas de detalle
+        public decimal Subtotal => Detalles.Sum(d => d.SubtotalLinea);//Suma subtotales todas las líneas de detalle
         public decimal MontoDescuento => (Subtotal * PorcentajeDescuento) / 100;
         public decimal BaseGravable => Subtotal - MontoDescuento;
         public decimal IVA => BaseGravable * 0.13m; //Se le aplica el IVA de 13%

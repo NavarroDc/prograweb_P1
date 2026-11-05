@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Carniceria.Models\Carniceria.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Datos\" />
-  </ItemGroup>
-
 </Project>

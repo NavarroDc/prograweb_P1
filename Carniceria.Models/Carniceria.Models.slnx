@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Carniceria.API/Carniceria.API.csproj" Id="4ddbc6bb-087e-435c-a51a-38768404d563" />
   <Project Path="Carniceria.Models/Carniceria.Models.csproj" />
   <Project Path="Carniceria.Web/Carniceria.Web.csproj" Id="8ae0ab89-9c15-46bb-9636-0bffe9622660" />
 </Solution>

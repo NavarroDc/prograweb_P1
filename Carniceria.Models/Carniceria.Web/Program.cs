@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient("CarniceriaApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7034/");
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

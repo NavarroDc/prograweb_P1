@@ -64,5 +64,22 @@ namespace Carniceria.API.Controllers
             DatosMemoria.Clientes[index] = clienteActualizado;
             return NoContent();
         }
+
+        [HttpDelete("{id:guid}")]
+        public IActionResult EliminarCliente(Guid id)
+        {
+            var cliente = DatosMemoria.Clientes.FirstOrDefault(c => c.Id == id);
+            if(cliente == null) return NotFound();
+
+            //No eliminar si tiene facturas
+            if(DatosMemoria.Facturas.Any(f => f.ClienteId == cliente.Identificacion))
+            {
+                return BadRequest("No se puede elminar el cliente porque tiene facturas asociadas");
+            }
+
+            DatosMemoria.Clientes.Remove(cliente);
+            return NoContent();
+
+        }
     }
 }

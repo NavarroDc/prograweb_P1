@@ -1,4 +1,5 @@
 ﻿using Carniceria.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Carniceria.API.Datos
 {
@@ -17,5 +18,11 @@ namespace Carniceria.API.Datos
                 FechaNacimiento = new DateTime(2003, 7, 12)
             }
         };
+
+        public static List<Empleado> Empleados { get; set; } = new List<Empleado>();
+        public static List<Producto> Productos { get; set; } = new List<Producto>();
+        public static List<Proveedor> Proveedores { get; set; } = new List<Proveedor>();
+        public static List<Factura> Facturas { get; set; } = new List<Factura>();
+        public static List<DetalleFactura> DetallesFactura {  get; set; } = new List<DetalleFactura>();
     }
 }

@@ -2,7 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient("CarniceriaApi", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7034/");
+    client.BaseAddress = new Uri("http://localhost:5137/");
 });
 
 // Add services to the container.
@@ -18,7 +18,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();

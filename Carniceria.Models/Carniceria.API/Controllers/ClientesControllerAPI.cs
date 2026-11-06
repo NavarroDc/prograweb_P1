@@ -65,7 +65,7 @@ namespace Carniceria.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id:guid}")] //6. Eliminar clientes
         public IActionResult EliminarCliente(Guid id)
         {
             var cliente = DatosMemoria.Clientes.FirstOrDefault(c => c.Id == id);

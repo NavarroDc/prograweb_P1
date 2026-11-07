@@ -63,7 +63,7 @@ namespace Carniceria.Web.Controllers
             
         }
 
-       /* //BUSCAR CLIENTE
+        //BUSCAR CLIENTE
         //Muestra pantalla de búsqueda
         [HttpGet]
         public IActionResult Buscar()
@@ -73,19 +73,45 @@ namespace Carniceria.Web.Controllers
 
         //Procesa la búsqueda
         [HttpPost]
-        public IActionResult Buscar(string identificacion)
+        public async Task<IActionResult> Buscar(string identificacion)
         {
-            var clienteEncontrado = listaClientes.FirstOrDefault(c => c.Identificacion == identificacion);
-
-            if(clienteEncontrado == null)
+            //Si el usuario no escribe nada y presiona buscar
+            if (string.IsNullOrWhiteSpace(identificacion))
             {
-                ViewBag.Mensaje = "No se encontraron clientes con la identificación ingresada";
+                ViewBag.Mensaje = "Debe ingresar una identificación para buscar...";
+                return View();
             }
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            return View(clienteEncontrado);
+            try
+            {
+                //Llamada al endpoint de la API que busca por identificación
+                var respuesta = await clienteHttp.GetAsync($"api/clientes/buscar/{identificacion}");
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var clienteEncontrado = await respuesta.Content.ReadFromJsonAsync<Cliente>();
+                    return View(clienteEncontrado);
+                }
+                else if (respuesta.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ViewBag.Mensaje = "No se encontraron clientes con la identificación ingresada";
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Ocurrió un error al consultar los datos";
+                    return View();
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Mensaje = "Error al conectar con la API";
+                return View();
+            }
         }
 
-         //ACTUALIZAR CLIENTE
+        /* //ACTUALIZAR CLIENTE
         //Busca cliente y muestra el formulario lleno
         [HttpGet]
         public IActionResult Actualizar(Guid id)

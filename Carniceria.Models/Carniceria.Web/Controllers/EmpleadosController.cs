@@ -69,39 +69,49 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-        /* //ACTUALIZAR EMPLEADO(GET)
+        //ACTUALIZAR EMPLEADO(GET)
         //Busca al empleado por ID y muestra el formulario lleno
-        public IActionResult Actualizar(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> Actualizar(Guid id)
         {
-            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
-            if(empleado == null)
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            //Consulta API
+            var respuesta = await empleadoHttp.GetAsync($"api/empleados/{id}");
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var empleado = await respuesta.Content.ReadFromJsonAsync<Empleado>();
+                return View(empleado);
             }
-            return View(empleado);
+
+            return RedirectToAction("Index");
         }
 
         //[POST]Remplazo los datos del empleado en la lista de empleados
         [HttpPost]
-        public IActionResult Actualizar(Empleado empleadoActualizado)
+        public async Task<IActionResult> Actualizar(Guid id, Empleado empleadoActualizado)
         {
-            bool existe = _empleados.Any(e => e.Identificacion == empleadoActualizado.Identificacion && e.Id != empleadoActualizado.Id);
-            if (existe)
+            empleadoActualizado.Id = id;
+            ModelState.Remove("Id");
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Identificacion", "Ya existe otra persona con esta identificación");
+                return View(empleadoActualizado);
             }
 
-            if (ModelState.IsValid)
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            var respuesta = await empleadoHttp.PutAsJsonAsync($"api/empleados/{id}", empleadoActualizado);
+            if (respuesta.IsSuccessStatusCode)
             {
-                var index = _empleados.FindIndex(e => e.Id == empleadoActualizado.Id);
-                if (index != -1)
-                {
-                    _empleados[index] = empleadoActualizado;
-                    TempData["MensajeExisto"] = "Datos del empleado actualizados correctamente";
-                    return RedirectToAction("Index");
-                }
+                TempData["MensajeExito"] = "Datos del empleado actualizados correctamente";
+                return RedirectToAction("Index");
             }
-            return View(empleadoActualizado);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(empleadoActualizado);
+            }
         }
 
         //ELIMINAR EMPLEADO (GET)
@@ -129,7 +139,7 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //BUSCAR(GET)
+       /* //BUSCAR(GET)
         //Muestra la pantalla de búsqueda con la caja de texto
         public IActionResult Buscar()
         {

@@ -57,7 +57,7 @@ namespace Carniceria.API.Controllers
             }
 
             var index = DatosMemoria.Empleados.FindIndex(e => e.Id == id);
-            if (index != -1) return NotFound();
+            if (index == -1) return NotFound();
 
             DatosMemoria.Empleados[index] = empleadoActualizado;
             return NoContent(); //204

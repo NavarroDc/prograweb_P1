@@ -116,25 +116,30 @@ namespace Carniceria.Web.Controllers
 
         //ELIMINAR EMPLEADO (GET)
         //Muestra la pantalla de confirmación con los datos
-        public IActionResult Eliminar(Guid id)
+        [HttpGet]
+        public async Task <IActionResult> Eliminar(Guid id)
         {
-            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
-            if(empleado == null)
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            var respuesta = await empleadoHttp.GetAsync($"api/empleados/{id}");
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var empleado = await respuesta.Content.ReadFromJsonAsync<Empleado>();
+                return View(empleado);
             }
-            return View(empleado);
+            return RedirectToAction("Index");
         }
 
         //(POST) Ejecuta el borrado 
         [HttpPost]
-        public IActionResult EliminarConfirmado(Guid id)
+        public async Task<IActionResult> EliminarConfirmado(Guid id)
         {
-            var empleado = _empleados.FirstOrDefault(e => e.Id == id);
-            if(empleado != null)
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await empleadoHttp.DeleteAsync($"api/empleados/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                _empleados.Remove(empleado);
-                TempData["MensajeExito"] = "Empleado eliminado del sistema";
+                TempData["MensajeExito"] = "Empleado eliminado correctamente";
             }
             return RedirectToAction("Index");
         }

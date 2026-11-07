@@ -26,7 +26,7 @@ namespace Carniceria.API.Datos
                 Id = Guid.NewGuid(),
                 TipoIdentificacion = "Cédula nacional",
                 Identificacion = "10101010",
-                Nombre = "Daniel",
+                Nombre = "Alejandro",
                 PrimerApellido = "Vega",
                 SegundoApellido = "Maroto",
                 FechaNacimiento = new DateTime(2003, 8, 13),

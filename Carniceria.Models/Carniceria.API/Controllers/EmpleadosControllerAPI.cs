@@ -63,7 +63,7 @@ namespace Carniceria.API.Controllers
             return NoContent(); //204
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{id:guid}")]//5.Eliminar empleado
         public IActionResult EliminarEmpleado (Guid id)
         {
             var empleado = DatosMemoria.Empleados.FirstOrDefault(e => e.Id == id);

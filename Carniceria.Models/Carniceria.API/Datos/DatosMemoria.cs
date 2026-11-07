@@ -19,7 +19,24 @@ namespace Carniceria.API.Datos
             }
         };
 
-        public static List<Empleado> Empleados { get; set; } = new List<Empleado>();
+        public static List<Empleado> Empleados { get; set; } = new List<Empleado>
+        {
+            new Empleado
+            {
+                Id = Guid.NewGuid(),
+                TipoIdentificacion = "Cédula nacional",
+                Identificacion = "10101010",
+                Nombre = "Daniel",
+                PrimerApellido = "Vega",
+                SegundoApellido = "Maroto",
+                FechaNacimiento = new DateTime(2003, 8, 13),
+                SalarioMensual = 10000,
+                FechaIngreso = new DateTime(2020, 8, 13),
+                AreaTrabajo = "Administración",
+                Puesto = "Asistente administrativo",
+                Turno = "Tarde"
+            }
+        };
         public static List<Producto> Productos { get; set; } = new List<Producto>();
         public static List<Proveedor> Proveedores { get; set; } = new List<Proveedor>();
         public static List<Factura> Facturas { get; set; } = new List<Factura>();

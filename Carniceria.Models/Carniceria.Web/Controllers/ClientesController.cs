@@ -154,34 +154,34 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-       /* //ELIMINAR CLIENTE
+        //ELIMINAR CLIENTE
         //Busca al cliente y muestra la pantalla de confirmación
         [HttpGet]
-        public IActionResult Eliminar(Guid id)
+        public async Task<IActionResult> Eliminar(Guid id)
         {
-            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await clienteHttp.GetAsync($"api/clientes/{id}");
 
-            if( cliente == null)
+            if (!respuesta.IsSuccessStatusCode)
             {
                 return NotFound();
             }
-
+            var cliente = await respuesta.Content.ReadFromJsonAsync<Cliente>();
             return View(cliente);
         }
 
         //Procesa el borrado final
         [HttpPost, ActionName("Eliminar")]
-        public IActionResult EliminarConfirmado(Guid id)
+        public async Task<IActionResult> EliminarConfirmado(Guid id)
         {
-            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await clienteHttp.DeleteAsync($"api/clientes/{id}");
 
-            if(cliente != null)
+            if (respuesta.IsSuccessStatusCode)
             {
-                listaClientes.Remove(cliente);//Se elimina definitivamente
-                TempData["MensajeExito"] = "¡El cliente ha sido eliminado correctamente!";
+                TempData["MensajeExito"] = "El cliente ha sido eliminado correctamente";
             }
-
             return RedirectToAction(nameof(Index));
-        }*/
+        }
     }
 }

@@ -4,24 +4,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Net.Http.Json;
 
 
 namespace Carniceria.Web.Controllers
 {
     public class EmpleadosController : Controller
     {
-        /* private static List<Empleado> _empleados = new List<Empleado>();
+        private readonly IHttpClientFactory _httpClientFactory;
+        public EmpleadosController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
 
+        }
         //CONSULTAR EMPLEADO
         //Muestra la tabla principal con todos los empleados
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View(_empleados);
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            try
+            {
+                var listaEmpleados = await empleadoHttp.GetFromJsonAsync<List<Empleado>>("api/empleados");
+                return View(listaEmpleados ?? new List<Empleado>());
+            }
+            catch
+            {
+                return View(new List<Empleado>());
+            }
         }
 
         //CREAR EMPLEADO (GET)
         //Muestra el formulario en blanco
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -30,25 +46,30 @@ namespace Carniceria.Web.Controllers
         //CREAR EMPLEADO POST
         //Recibe los datos, valida y guarda
         [HttpPost]
-        public IActionResult Create(Empleado nuevoEmpleado)
+        public async Task <IActionResult> Create(Empleado nuevoEmpleado)
         {
-            bool identificacionExiste = _empleados.Any(e => e.Identificacion == nuevoEmpleado.Identificacion);
-            if (identificacionExiste)
-            {
-                ModelState.AddModelError("Identificacion", "Ya existe un empleado con esta identificación");
-            }
+            ModelState.Clear();
 
-            if (ModelState.IsValid)
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            //Se envía a la API
+            var respuesta = await empleadoHttp.PostAsJsonAsync("api/empleados", nuevoEmpleado);
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                nuevoEmpleado.Id = Guid.NewGuid();//ID Generado automáticamente
-                _empleados.Add(nuevoEmpleado);
                 TempData["MensajeExito"] = "Empleado registrado correctamente";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            return View(nuevoEmpleado);//Devuelve al formulario si hay error
+            else
+            {
+                //En caso de que la API lo rechace
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(nuevoEmpleado);
+            }
         }
 
-        //ACTUALIZAR EMPLEADO(GET)
+        /* //ACTUALIZAR EMPLEADO(GET)
         //Busca al empleado por ID y muestra el formulario lleno
         public IActionResult Actualizar(Guid id)
         {
@@ -135,6 +156,6 @@ namespace Carniceria.Web.Controllers
             }
 
             return View(empleado);
-        }
-    }   */
+        }*/
+    }   
 }

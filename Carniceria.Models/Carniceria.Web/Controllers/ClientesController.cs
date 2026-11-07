@@ -17,6 +17,7 @@ namespace Carniceria.Web.Controllers
         }
 
         //CONSULTAR CLIENTE
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");

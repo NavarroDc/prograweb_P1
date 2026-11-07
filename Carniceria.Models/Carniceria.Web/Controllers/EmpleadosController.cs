@@ -10,7 +10,7 @@ namespace Carniceria.Web.Controllers
 {
     public class EmpleadosController : Controller
     {
-        private static List<Empleado> _empleados = new List<Empleado>();
+        /* private static List<Empleado> _empleados = new List<Empleado>();
 
         //CONSULTAR EMPLEADO
         //Muestra la tabla principal con todos los empleados
@@ -136,5 +136,5 @@ namespace Carniceria.Web.Controllers
 
             return View(empleado);
         }
-    }   
+    }   */
 }

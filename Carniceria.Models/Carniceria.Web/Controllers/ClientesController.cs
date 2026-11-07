@@ -111,48 +111,50 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-        /* //ACTUALIZAR CLIENTE
+        //ACTUALIZAR CLIENTE
         //Busca cliente y muestra el formulario lleno
         [HttpGet]
-        public IActionResult Actualizar(Guid id)
+        public async Task<IActionResult> Actualizar(Guid id)
         {
-            var cliente = listaClientes.FirstOrDefault(c => c.Id == id);
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            if(cliente == null)
+            //Consulta de la API por el ID
+            var respuesta = await clienteHttp.GetAsync($"api/clientes/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                return NotFound();//Error en caso de que no exista
+                var cliente = await respuesta.Content.ReadFromJsonAsync<Cliente>();
+                return View(cliente);
             }
-
-            return View(cliente);
+            return NotFound();//Error en caso de que no exista
         }
 
         //Captura lo datos actualizados, valida y guarda
         [HttpPost]
-        public IActionResult Actualizar (Cliente clienteActualizado)
+        public async Task<IActionResult> Actualizar(Guid id, Cliente clienteActualizado)
         {
-            bool existe = listaClientes.Any(c => c.Identificacion == clienteActualizado.Identificacion && c.Id != clienteActualizado.Id);
-            if (existe)
+            clienteActualizado.Id = id;
+
+            ModelState.Clear();
+
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            //Se envían los datos a la API con PUT
+            var respuesta = await clienteHttp.PutAsJsonAsync($"api/clientes/{clienteActualizado.Id}", clienteActualizado);
+            if (respuesta.IsSuccessStatusCode)
             {
-                ModelState.AddModelError("Identificacion", "Otro cliente ya tiene esta identificación");
-            }
-            if (ModelState.IsValid)
-            {
-                var index = listaClientes.FindIndex(c => c.Id == clienteActualizado.Id);
-
-                if (index != -1)
-                {
-                    listaClientes[index] = clienteActualizado;
-
-                    TempData["MensajeExito"] = "¡El cliente fue actualizado correctamente!";
-                }
-
+                TempData["MensajeExito"] = "El cliente fue actualizado correctamente";
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(clienteActualizado);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(clienteActualizado);
+            }
         }
 
-        //ELIMINAR CLIENTE
+       /* //ELIMINAR CLIENTE
         //Busca al cliente y muestra la pantalla de confirmación
         [HttpGet]
         public IActionResult Eliminar(Guid id)

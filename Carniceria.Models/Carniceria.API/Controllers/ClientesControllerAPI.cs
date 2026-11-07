@@ -5,7 +5,7 @@ using Carniceria.API.Datos;
 
 namespace Carniceria.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/clientes")]
     [ApiController]
     public class ClientesControllerAPI : ControllerBase
     {

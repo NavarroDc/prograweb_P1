@@ -4,7 +4,7 @@ namespace Carniceria.Models
 {
     public class Persona
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar el tipo de identificación...")]
         [Display(Name = "Tipo de identificación")]

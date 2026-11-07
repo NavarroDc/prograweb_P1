@@ -3,17 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 
 namespace Carniceria.Web.Controllers
 {
     public class ClientesController : Controller
     {
-        private static List<Cliente> listaClientes =  new List<Cliente>();
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ClientesController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         //CONSULTAR CLIENTE
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(listaClientes);
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            try
+            {
+                var listaClientes = await clienteHttp.GetFromJsonAsync<List<Cliente>>("api/clientes");
+                return View(listaClientes ?? new List<Cliente>());
+            }
+            catch
+            {
+                return View(new List<Cliente>());
+            }
         }
 
         //REGISTRAR CLIENTE
@@ -26,24 +41,29 @@ namespace Carniceria.Web.Controllers
 
         //Captura los datos y los guarda
         [HttpPost]
-        public IActionResult Create(Cliente clienteNuevo)
+        public async Task<IActionResult> Create(Cliente clienteNuevo)
         {
-            //Validaciones clase Cliente
-            bool existe = listaClientes.Any(c => c.Identificacion == clienteNuevo.Identificacion);
-            if (existe)
+            ModelState.Clear();
+
+            var clienteHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            var respuesta = await clienteHttp.PostAsJsonAsync("api/clientes",clienteNuevo);
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                ModelState.AddModelError("Identificacion", "Ya existe un cliente con esa identificación");
-            }
-            if (ModelState.IsValid)
-            {
-                clienteNuevo.Id = Guid.NewGuid();
-                listaClientes.Add(clienteNuevo);
                 return RedirectToAction(nameof(Index));
             }
-            return View(clienteNuevo);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(clienteNuevo);
+            }
+
+            
         }
 
-        //BUSCAR CLIENTE
+       /* //BUSCAR CLIENTE
         //Muestra pantalla de búsqueda
         [HttpGet]
         public IActionResult Buscar()
@@ -65,7 +85,7 @@ namespace Carniceria.Web.Controllers
             return View(clienteEncontrado);
         }
 
-        //ACTUALIZAR CLIENTE
+         //ACTUALIZAR CLIENTE
         //Busca cliente y muestra el formulario lleno
         [HttpGet]
         public IActionResult Actualizar(Guid id)
@@ -134,6 +154,6 @@ namespace Carniceria.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-        }
+        }*/
     }
 }

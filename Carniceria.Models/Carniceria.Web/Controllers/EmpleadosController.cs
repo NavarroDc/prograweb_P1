@@ -144,8 +144,9 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
-       /* //BUSCAR(GET)
+        //BUSCAR(GET)
         //Muestra la pantalla de búsqueda con la caja de texto
+        [HttpGet]
         public IActionResult Buscar()
         {
             return View();
@@ -154,23 +155,42 @@ namespace Carniceria.Web.Controllers
         //POST 
         //Procesa la búsqueda por identificación
         [HttpPost]
-        public IActionResult Buscar(string identificacion)
+        public async Task <IActionResult> Buscar(string identificacion)
         {
-            if (string.IsNullOrWhiteSpace(identificacion))
+            //Validar espacios vacíos
+            if (string.IsNullOrEmpty(identificacion))
             {
-                ViewBag.Mensaje = "Debe ingresar una identificación para poder buscar un empleado";
+                ViewBag.Mensaje = "Debe escribir una identificación para buscar un empleado";
                 return View();
             }
+            var empleadoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            var empleado = _empleados.FirstOrDefault(e => e.Identificacion == identificacion);
-
-            if (empleado == null)
+            try
             {
-                ViewBag.Mensaje = "No se encontraron empleados con la identificación ingresada";
+                //Consultar a la API por identificación
+                var respuesta = await empleadoHttp.GetAsync($"api/empleados/buscar/{identificacion}");
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var empleado = await respuesta.Content.ReadFromJsonAsync<Empleado>();
+                    return View(empleado);
+                }
+                else if(respuesta.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ViewBag.Mensaje = "No se encontraron empleados con la identificación ingresada";
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Ocurrió un error al consultar los datos...";
+                    return View();
+                }
+            }
+            catch (Exception) 
+            {
+                ViewBag.Mensaje = "Error de conexión con la API...";
                 return View();
             }
-
-            return View(empleado);
-        }*/
+        }
     }   
 }

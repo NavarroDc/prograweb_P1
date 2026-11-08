@@ -8,10 +8,10 @@ namespace Carniceria.Models
     public class DetalleFactura
     {
         [Key]
-        public string IdetificadorDetalle { get; set; }
+        public Guid IdentificadorDetalle { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Debe seleccionar el producto del inventario...")]
-        public string ProductoId { get; set; }
+        public Guid ProductoId { get; set; }
 
         public string UnidadMedida { get; set; }
 
@@ -21,8 +21,9 @@ namespace Carniceria.Models
 
         public decimal PrecioUnitario { get; set; }
 
+        // Cálculo automático
         public decimal SubtotalLinea => Cantidad * PrecioUnitario;
 
-
+        public Producto ProductoAsociado { get; set; }
     }
 }

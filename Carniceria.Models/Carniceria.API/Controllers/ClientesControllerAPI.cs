@@ -72,7 +72,7 @@ namespace Carniceria.API.Controllers
             if(cliente == null) return NotFound();
 
             //No eliminar si tiene facturas
-            if(DatosMemoria.Facturas.Any(f => f.ClienteId == cliente.Identificacion))
+            if(DatosMemoria.Facturas.Any(f => f.ClienteId == cliente.Id))
             {
                 return BadRequest("No se puede elminar el cliente porque tiene facturas asociadas");
             }

@@ -69,6 +69,11 @@ namespace Carniceria.API.Controllers
             var empleado = DatosMemoria.Empleados.FirstOrDefault(e => e.Id == id);
             if (empleado == null) return NotFound();
 
+            if (DatosMemoria.Facturas.Any(f => f.EmpleadoId == empleado.Id))
+            {
+                return BadRequest("No se puede eliminar la persona empleada porque tiene facturas asociadas");
+            }
+
             DatosMemoria.Empleados.Remove(empleado);
             return NoContent();//204
         }

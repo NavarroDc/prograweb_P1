@@ -88,6 +88,11 @@ namespace Carniceria.API.Controllers
             var producto = DatosMemoria.Productos.FirstOrDefault(p => p.Id == id);
             if (producto == null) return NotFound();
 
+            if (DatosMemoria.Facturas.Any(f => f.Detalles.Any(d => d.ProductoId == producto.Id)))
+            {
+                return BadRequest("No se puede eliminar el producto porque es parte del detalle de una factura");
+            }
+
             DatosMemoria.Productos.Remove(producto);
             return NoContent();
         }

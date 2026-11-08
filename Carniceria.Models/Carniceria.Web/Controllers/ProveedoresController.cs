@@ -136,7 +136,7 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
-       /* //BUSCAR PROVEEDORES GET
+       //BUSCAR PROVEEDORES GET
         [HttpGet]
         public IActionResult Buscar()
         {
@@ -145,22 +145,40 @@ namespace Carniceria.Web.Controllers
 
         //BUSCAR PROVEEDORES POST
         [HttpPost]
-        public IActionResult Buscar(string terminoBusqueda)
+        public async Task<IActionResult> Buscar(string terminoBusqueda)
         {
             if (string.IsNullOrWhiteSpace(terminoBusqueda))
             {
                 ViewBag.Mensaje = "Ingrese la identificación o razón social para buscar un proveedor";
                 return View();
             }
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            var proveedor = listaProveedores.FirstOrDefault(p => p.Identificacion == terminoBusqueda || p.RazonSocial == terminoBusqueda); 
-            
-            if(proveedor == null)
+            try
             {
-                ViewBag.Mensaje = "No se encontraron proveedores con los datos ingresados";
+                var respuesta = await proveedorHttp.GetAsync($"api/proveedores/buscar/{terminoBusqueda}");
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var proveedoresEncontrados = await respuesta.Content.ReadFromJsonAsync<List<Proveedor>>();
+                    var proveedor = proveedoresEncontrados?.FirstOrDefault();
+                    return View(proveedor);
+                }
+                else if(respuesta.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ViewBag.Mensaje = "No se encontraron proveedores con los datos ingresados";
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Ocurrió un error al consultar los datos";
+                    return View();
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Mensaje = "Error al conectar con la API";
                 return View();
             }
-            return View(proveedor);
-        }*/
+        }
     }
 }

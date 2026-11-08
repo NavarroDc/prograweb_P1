@@ -137,32 +137,36 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-        /*//ELIMINAR PRODUCTO (GET)
+        //ELIMINAR PRODUCTO (GET)
         [HttpGet]
-        public IActionResult Eliminar(Guid id)
+        public async Task <ActionResult> Eliminar(Guid id)
         {
-            var producto = listaProductos.FirstOrDefault(p => p.Id == id);
-            if(producto == null)
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await apiHttp.GetAsync($"api/productos/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var producto = await respuesta.Content.ReadFromJsonAsync<Producto>();
+                return View(producto);
             }
-            return View(producto);
+            return RedirectToAction("Index");
         }
 
         //ELIMINAR PRODUCTO (POST)
         [HttpPost]
-        public IActionResult EliminarConfirmado(Guid id) 
+        public async Task<IActionResult> EliminarConfirmado(Guid id) 
         {
-            var producto = listaProductos.FirstOrDefault(p => p.Id == id);
-            if(producto != null)
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await apiHttp.DeleteAsync($"api/productos/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                listaProductos.Remove(producto);
                 TempData["MensajeExito"] = "Producto eliminado correctamente del inventario";
             }
             return RedirectToAction("Index");
         }
 
-        //BUSCAR PRODUCTO (GET)
+        /*//BUSCAR PRODUCTO (GET)
         [HttpGet]
         public IActionResult Buscar()
         {

@@ -11,6 +11,21 @@
 <form asp-action="Create" method="post">
 
     <p>
+        <label asp-for="ProveedorId">Proveedor</label><br />
+        <select asp-for="ProveedorId">
+            <option value="">-- Seleccione un proveedor --</option>
+            @if (ViewBag.ListaProveedores != null)
+            {
+                foreach (var proveedor in ViewBag.ListaProveedores)
+                {
+                    <option value="@proveedor.Id">@proveedor.RazonSocial (@proveedor.Identificacion)</option>
+                }
+            }
+        </select><br />
+        <span asp-validation-for="ProveedorId" style="color: red;"></span>
+    </p>
+
+    <p>
         <label asp-for="CodigoProducto"></label><br />
         <input asp-for="CodigoProducto" />
         <span asp-validation-for="CodigoProducto" style="color: red;"></span>

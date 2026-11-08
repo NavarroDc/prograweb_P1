@@ -8,41 +8,72 @@ namespace Carniceria.Web.Controllers
 {
     public class ProductosController : Controller 
     {
-        private static List<Producto> listaProductos = new List<Producto>();
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ProductosController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         //COSULTAR PRODUCTOS
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
-            return View(listaProductos);
+            var productoHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            try
+            {
+                var listaProductos = await productoHttp.GetFromJsonAsync<List<Producto>>("api/productos");
+                return View(listaProductos ?? new List<Producto>());
+            }
+            catch
+            {
+                return View(new List<Producto>());
+            }
         }
 
         //REGISTRAR PRODUCTO(GET)
-        public  IActionResult Create()
+        [HttpGet]
+        public async Task <IActionResult> Create()
         {
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+
+            ViewBag.ListaProveedores = proveedores;
             return View();
         }
 
         //REGISTRAR PRODUCTO (POST)
         [HttpPost]
-        public IActionResult Create(Producto nuevoProducto)
+        public async Task <IActionResult> Create(Producto nuevoProducto)
         {
-            bool existe = listaProductos.Any(p => p.CodigoProducto.Equals(nuevoProducto.CodigoProducto, StringComparison.OrdinalIgnoreCase));
-            if (existe)
-            {
-                ModelState.AddModelError("Codigo", "Ya existe un producto registrado con este código");
-            }
+            ModelState.Remove("Id");
+            ModelState.Remove("Proveedor");
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                nuevoProducto.Id = Guid.NewGuid();
-                listaProductos.Add(nuevoProducto);
-                TempData["MensajeExito"] = "Producto registrado correctamente en el inventario";
+                var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+                ViewBag.ListaProveedores = proveedores;
+                return View(nuevoProducto);
+            }
+            var respuesta = await apiHttp.PostAsJsonAsync("api/productos", nuevoProducto);
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "Producto registrado correctamente";
                 return RedirectToAction("Index");
             }
-            return View(nuevoProducto);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("CodigoProducto", mensajeError);
+
+                var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+                ViewBag.ListaProveedores = proveedores;
+
+                return View(nuevoProducto);
+            }
         }
 
-        //ACTUALIZAR PRODUCTOR (POST)
+       /* //ACTUALIZAR PRODUCTOR (POST)
         [HttpGet]
         public IActionResult Actualizar(Guid id)
         {
@@ -128,6 +159,6 @@ namespace Carniceria.Web.Controllers
             }
 
             return View(producto);
-        }
+        }*/
     }
 }

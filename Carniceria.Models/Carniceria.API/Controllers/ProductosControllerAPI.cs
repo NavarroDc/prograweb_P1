@@ -57,5 +57,29 @@ namespace Carniceria.API.Controllers
 
             return CreatedAtAction(nameof(GetProductoPorId), new { id = productoNuevo.Id }, productoNuevo);
         }
+
+        [HttpPut("{id:guid}")]//4. Actualizar producto
+        public IActionResult ActualizarProducto(Guid id, Producto productoActualizado)
+        {
+            if (id != productoActualizado.Id) return BadRequest("Los IDs no coinciden");
+
+            //Validar que el proveedor existe
+            bool existeProveedor = DatosMemoria.Proveedores.Any(p => p.Id == productoActualizado.ProveedorId);
+            if (!existeProveedor)
+            {
+                return BadRequest("El proveedor seleccionado no existe...");
+            }
+            //Validar que el nuevo código no lo tenga otro producto
+            bool existeOtroCodigo = DatosMemoria.Productos.Any(p => p.CodigoProducto == productoActualizado.CodigoProducto);
+            if (existeOtroCodigo)
+            {
+                return BadRequest("Ya existe otro producto con el código ingresado");
+            }
+            var index = DatosMemoria.Productos.FindIndex(p => p.Id == id);
+            if (index == -1) return NotFound();
+
+            DatosMemoria.Productos[index] = productoActualizado;
+            return NoContent();
+        }
     }
 }

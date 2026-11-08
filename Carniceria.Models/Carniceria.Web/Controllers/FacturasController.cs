@@ -192,5 +192,40 @@ namespace Carniceria.Web.Controllers
                 return View(facturaActualizada);
             }
         }
+
+        // 5. ELIMINAR FACTURA GET
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(Guid id)
+        {
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var factura = await apiHttp.GetFromJsonAsync<Factura>($"api/facturas/{id}");
+            if (factura == null) return NotFound();
+
+            return View(factura);
+        }
+
+        // 5. ELIMINAR FACTURA POST
+        [HttpPost, ActionName("Eliminar")]
+        public async Task<IActionResult> EliminarConfirmado(Guid id)
+        {
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await apiHttp.DeleteAsync($"api/facturas/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "La factura ha sido eliminada correctamente";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // Captura el error de la api
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                TempData["MensajeError"] = string.IsNullOrWhiteSpace(mensajeError) ? "No se pudo eliminar la factura." : mensajeError;
+
+                // Volvemos a consultar la factura para recargar la vista con el mensaje de advertencia
+                var factura = await apiHttp.GetFromJsonAsync<Factura>($"api/facturas/{id}");
+                return View(factura);
+            }
+        }
     }
 }

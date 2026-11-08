@@ -1,0 +1,40 @@
+﻿@model Carniceria.Models.Factura
+@{
+    ViewData["Title"] = "Eliminar Factura";
+}
+
+<h2 style="color: #d9534f;">Eliminar Factura</h2>
+<hr />
+
+@if (TempData["MensajeError"] != null)
+{
+    <div style="background-color: #f8d7da; color: #721c24; padding: 12px; margin-bottom: 20px; border: 1px solid #f5c6cb; border-radius: 4px;">
+        <strong>Atención:</strong> @TempData["MensajeError"]
+    </div>
+}
+
+<h3>¿Está seguro de que desea eliminar esta factura?</h3>
+<div style="background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px; border-radius: 4px;">
+    <p><b>Número de Factura:</b> @Model.NumeroFactura</p>
+    <p><b>Fecha de Emisión:</b> @Model.FechaHoraEmision.ToString("dd/MM/yyyy HH:mm:ss")</p>
+    <p><b>Estado Actual:</b> <span style="color: @(Model.Estado == "Pendiente" ? "green" : "red"); font-weight: bold;">@Model.Estado</span></p>
+    <p><b>Total Final:</b> @Model.Total.ToString("C")</p>
+</div>
+
+@if (Model.Estado != "Pendiente")
+{
+    <div style="color: #8a6d3b; background-color: #fcf8e3; border: 1px solid #faebcc; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+         <strong>Restricción del Sistema:</strong> Esta factura se encuentra en estado <b>'@Model.Estado'</b>. Únicamente las facturas en estado <i>Pendiente</i> pueden ser eliminadas físicamente...
+    </div>
+}
+
+<form asp-action="Eliminar" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    @if (Model.Estado == "Pendiente")
+    {
+        <button type="submit" class="btn btn-danger" style="background-color: #d9534f; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Confirmar Eliminación</button>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary" style="margin-left: 10px; text-decoration: none; padding: 8px 16px; background-color: #6c757d; color: white; border-radius: 4px;">Volver al listado</a>
+</form>

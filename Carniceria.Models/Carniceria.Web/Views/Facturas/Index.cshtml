@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Carniceria.Models.Factura>
+@{
+    ViewData["Title"] = "Inventario de Facturas";
+}
+
+<h2>Gestión de Facturas</h2>
+<hr />
+
+<p>
+    <a asp-action="Create">Registrar Nueva Factura</a> |
+    <a asp-action="Buscar">Buscar Factura</a>
+</p>
+
+@if (TempData["MensajeExito"] != null)
+{
+    <p style="color: green;">@TempData["MensajeExito"]</p>
+}
+
+<table class="table" border="1" style="width:100%; border-collapse: collapse; text-align: left;">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Fecha de Emisión</th>
+            <th>Cliente (Identificación)</th>
+            <th>Estado</th>
+            <th>Total Final</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NumeroFactura</td>
+                    <td>@item.FechaHoraEmision.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>
+                        @{
+                            var clientes = ViewBag.ListaClientes as List<Carniceria.Models.Cliente>;
+                            var cliente = clientes?.FirstOrDefault(c => c.Id == item.ClienteId);
+                            var infoCliente = cliente != null ? cliente.Identificacion : "Desconocido";
+                        }
+                        @infoCliente
+                    </td>
+                    <td>@item.Estado</td>
+                    <td>@item.Total.ToString("C")</td>
+                    <td>
+                        <a asp-action="Actualizar" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No hay facturas registradas en el sistema.</td>
+            </tr>
+        }
+    </tbody>
+</table>

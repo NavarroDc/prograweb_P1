@@ -8,13 +8,26 @@ namespace Carniceria.Web.Controllers
 {
     public class ProveedoresController : Controller
     {
-        private static List<Proveedor> listaProveedores = new List<Proveedor>();
+        private readonly IHttpClientFactory _httpClientFactory;
+        public ProveedoresController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         //CONSULTAR PROVEEDORES GET
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(listaProveedores);
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            try
+            {
+                var listaProveedores = await proveedorHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores");
+                return View(listaProveedores ?? new List<Proveedor>());
+            }
+            catch
+            {
+                return View(new List<Proveedor>());
+            }
         }
 
         //REGISTRAR PROVEEDORES GET
@@ -26,20 +39,32 @@ namespace Carniceria.Web.Controllers
 
         //REGISTRAR PROVEEDORES POST
         [HttpPost]
-        public IActionResult Create(Proveedor proveedor)
+        public async Task<IActionResult> Create(Proveedor proveedor)
         {
-            if (ModelState.IsValid)
-            {
-                proveedor.Id = Guid.NewGuid();
-                listaProveedores.Add(proveedor);
-                TempData["MensajeExito"] = "Proveedor registrado correctamente";
+            ModelState.Remove("Id");
 
+            if (!ModelState.IsValid)
+            {
+                return View(proveedor);
+            }
+
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await proveedorHttp.PostAsJsonAsync("api/proveedores", proveedor);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "Proveedor registrado correctamente";
                 return RedirectToAction("Index");
             }
-            return View(proveedor);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(proveedor);
+            }
         }
 
-        //ACTUALIZAR PROVEEDORES GET
+        /*//ACTUALIZAR PROVEEDORES GET
         [HttpGet]
         public IActionResult Actualizar(Guid id)
         {
@@ -123,6 +148,6 @@ namespace Carniceria.Web.Controllers
                 return View();
             }
             return View(proveedor);
-        }
+        }*/
     }
 }

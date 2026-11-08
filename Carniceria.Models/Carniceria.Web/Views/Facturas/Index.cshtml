@@ -16,14 +16,17 @@
     <p style="color: green;">@TempData["MensajeExito"]</p>
 }
 
-<table class="table" border="1" style="width:100%; border-collapse: collapse; text-align: left;">
+<table class="table" border="1" style="width:100%; border-collapse: collapse; text-align: left; font-size: 14px;">
     <thead>
         <tr>
             <th>Número</th>
             <th>Fecha de Emisión</th>
             <th>Cliente (Identificación)</th>
             <th>Estado</th>
-            <th>Total Final</th>
+            <th>Subtotal</th>
+            <th>Descuento</th>
+            <th>IVA (13%)</th>
+            <th>Total</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -44,9 +47,13 @@
                         @infoCliente
                     </td>
                     <td>@item.Estado</td>
-                    <td>@item.Total.ToString("C")</td>
+                    <td>@item.Subtotal.ToString("C")</td>
+                    <td>@item.MontoDescuento.ToString("C")</td>
+                    <td>@item.IVA.ToString("C")</td>
+                    <td><strong>@item.Total.ToString("C")</strong></td>
                     <td>
                         <a asp-action="Actualizar" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Anular" asp-route-id="@item.Id">Anular</a> |
                         <a asp-action="Eliminar" asp-route-id="@item.Id">Eliminar</a>
                     </td>
                 </tr>
@@ -55,7 +62,7 @@
         else
         {
             <tr>
-                <td colspan="6">No hay facturas registradas en el sistema.</td>
+                <td colspan="9">No hay facturas registradas en el sistema.</td>
             </tr>
         }
     </tbody>

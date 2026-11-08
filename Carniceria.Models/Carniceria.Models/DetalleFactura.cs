@@ -13,7 +13,7 @@ namespace Carniceria.Models
         [Required(ErrorMessage = "Debe seleccionar el producto del inventario...")]
         public Guid ProductoId { get; set; }
 
-        public string UnidadMedida { get; set; }
+        public string? UnidadMedida { get; set; }
 
         [Required(ErrorMessage = "Debe escribir la cantidad...")]
         [Range(0.01, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0...")]
@@ -24,6 +24,6 @@ namespace Carniceria.Models
         // Cálculo automático
         public decimal SubtotalLinea => Cantidad * PrecioUnitario;
 
-        public Producto ProductoAsociado { get; set; }
+        public Producto? ProductoAsociado { get; set; }
     }
 }

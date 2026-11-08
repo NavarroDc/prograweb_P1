@@ -1,0 +1,90 @@
+﻿@model Carniceria.Models.Factura
+@{
+    ViewData["Title"] = "Registrar Factura";
+}
+
+<h2>Registrar Nueva Factura</h2>
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" style="color: red;"></div>
+
+    <!-- CABECERA DE LA FACTURA -->
+    <fieldset style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <legend><b>Información General</b></legend>
+
+        <p>
+            <label>Cliente:</label><br />
+            <select asp-for="ClienteId" class="form-control">
+                <option value="">-- Seleccione un cliente --</option>
+                @if (ViewBag.ListaClientes != null)
+                {
+                    foreach (var cliente in ViewBag.ListaClientes)
+                    {
+                        <option value="@cliente.Id">@cliente.Nombre @cliente.PrimerApellido @cliente.SegundoApellido (@cliente.Identificacion)</option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Empleado Responsable:</label><br />
+            <select asp-for="EmpleadoId" class="form-control">
+                <option value="">-- Seleccione un empleado --</option>
+                @if (ViewBag.ListaEmpleados != null)
+                {
+                    foreach (var empleado in ViewBag.ListaEmpleados)
+                    {
+                        <option value="@empleado.Id">@empleado.Nombre @empleado.PrimerApellido @empleado.SegundoApellido (@empleado.Identificacion)</option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Método de Pago:</label><br />
+            <select asp-for="MetodoPago">
+                <option value="">-- Seleccione método --</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="SINPE Móvil">SINPE Móvil</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+        </p>
+
+        <p>
+            <label>Porcentaje de Descuento (0 - 25):</label><br />
+            <input asp-for="PorcentajeDescuento" type="number" step="0.01" value="0" />
+        </p>
+    </fieldset>
+
+    <!-- DETALLE DE LA FACTURA (Líneas de productos) -->
+    <fieldset style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <legend><b>Línea de Detalle (Productos)</b></legend>
+
+        <!-- Línea inicial de detalle -->
+        <p>
+            <label>Producto:</label><br />
+            <select name="Detalles[0].ProductoId">
+                <option value="">-- Seleccione un producto --</option>
+                @if (ViewBag.ListaProductos != null)
+                {
+                    foreach (var producto in ViewBag.ListaProductos)
+                    {
+                        <option value="@producto.Id">@producto.NombreProducto (₡@producto.PrecioUnidadMedida - Stock: @producto.ExistenciaActual)</option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Cantidad:</label><br />
+            <input name="Detalles[0].Cantidad" type="number" step="0.01" value="1" />
+        </p>
+    </fieldset>
+
+    <p>
+        <button type="submit">Guardar Factura</button> |
+        <a asp-action="Index">Volver al listado</a>
+    </p>
+</form>

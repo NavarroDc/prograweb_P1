@@ -11,7 +11,7 @@ namespace Carniceria.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         // Generado automáticamente 
-        public string NumeroFactura { get; set; }
+        public string? NumeroFactura { get; set; }
 
         public DateTime FechaHoraEmision { get; set; } = DateTime.Now;
 

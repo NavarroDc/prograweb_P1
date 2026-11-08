@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Carniceria.Models.Factura>
+@{
+    ViewData["Title"] = "Buscar Factura";
+}
+
+<h2>Búsqueda de Facturas</h2>
+<hr />
+
+<!-- Formulario de búsqueda  -->
+<form asp-action="Buscar" method="post">
+    <div asp-validation-summary="All" style="color: red; margin-bottom: 15px;"></div>
+
+    <div style="margin-bottom: 20px;">
+        <label><b>Ingrese el número de factura o la cédula del cliente:</b></label><br />
+        <input type="text" name="termino" class="form-control" style="width: 350px; display: inline-block; margin-top: 5px;" placeholder="Ej: FAC-0001 o Cédula" required />
+        <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Buscar</button>
+    </div>
+</form>
+
+<p>
+    <a asp-action="Index">Volver al listado general</a>
+</p>
+
+<!-- Tabla de resultados si se encontraron coincidencias -->
+@if (Model != null && Model.Any())
+{
+    <h3>Resultados de la Búsqueda:</h3>
+    <table class="table" border="1" style="width:100%; border-collapse: collapse; text-align: left; margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>Número de Factura</th>
+                <th>Fecha de Emisión</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Total Final</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NumeroFactura</td>
+                    <td>@item.FechaHoraEmision.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>
+                        @{
+                            var clientes = ViewBag.ListaClientes as List<Carniceria.Models.Cliente>;
+                            var cliente = clientes?.FirstOrDefault(c => c.Id == item.ClienteId);
+                            var infoCliente = cliente != null ? $"{cliente.Nombre} {cliente.PrimerApellido} ({cliente.Identificacion})" : "Desconocido";
+                        }
+                        @infoCliente
+                    </td>
+                    <td>@item.Estado</td>
+                    <td>@item.Total.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -73,41 +73,71 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-       /* //ACTUALIZAR PRODUCTOR (POST)
+        //ACTUALIZAR PRODUCTOS (POST)
         [HttpGet]
-        public IActionResult Actualizar(Guid id)
+        public async Task <IActionResult> Actualizar(Guid id)
         {
-            var producto = listaProductos.FirstOrDefault(p => p.Id == id);
-            if (producto == null)
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            //Consultar datos API
+            var respuesta = await apiHttp.GetAsync($"api/productos/{id}");
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var producto = await respuesta.Content.ReadFromJsonAsync<Producto>();
+
+                // Se carga la lista de proveedores
+                var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+                ViewBag.ListaProveedores = proveedores;
+
+                return View(producto);
             }
-            return View(producto);
+
+            // Si no encuentra el producto, vuelve a la tabla
+            return RedirectToAction("Index");
         }
         //ACTUALIZAR PRODUCTOS (POST)
         [HttpPost]
-        public IActionResult Actualizar(Producto productoActualizado)
+        public async Task<IActionResult> Actualizar(Guid id, Producto productoActualizado)
         {
-            bool existe = listaProductos.Any(p => p.CodigoProducto.Equals(productoActualizado.CodigoProducto, StringComparison.OrdinalIgnoreCase) && productoActualizado.Id != productoActualizado.Id);
-            if (existe)
+            productoActualizado.Id = id;
+
+            ModelState.Remove("Id");
+            ModelState.Remove("Proveedor");
+
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            // Validaciones locales
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("CodigoProducto", "Otro producto ya utiliza este código");
+                var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+                ViewBag.ListaProveedores = proveedores;
+                return View(productoActualizado);
             }
 
-            if (ModelState.IsValid)
+            // Se envían datos actualizados
+            var respuesta = await apiHttp.PutAsJsonAsync($"api/productos/{id}", productoActualizado);
+
+            if (respuesta.IsSuccessStatusCode)
             {
-                var index = listaProductos.FindIndex(p => p.Id == productoActualizado.Id);
-                if(index != -1)
-                {
-                    listaProductos[index] = productoActualizado;
-                    TempData["MensajeExito"] = "Información del producto actualizada";
-                    return RedirectToAction("Index");
-                }
+                TempData["MensajeExito"] = "Información del producto actualizada";
+                return RedirectToAction("Index");
             }
-            return View(productoActualizado);
+            else
+            {
+                //En caso de que la API rechace el cambio
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("CodigoProducto", mensajeError);
+
+                //Recargar menú
+                var proveedores = await apiHttp.GetFromJsonAsync<List<Proveedor>>("api/proveedores") ?? new List<Proveedor>();
+                ViewBag.ListaProveedores = proveedores;
+
+                return View(productoActualizado);
+            }
         }
 
-        //ELIMINAR PRODUCTO (GET)
+        /*//ELIMINAR PRODUCTO (GET)
         [HttpGet]
         public IActionResult Eliminar(Guid id)
         {

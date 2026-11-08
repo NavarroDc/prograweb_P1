@@ -133,5 +133,64 @@ namespace Carniceria.Web.Controllers
                 return View(new List<Factura>());
             }
         }
+
+        [HttpGet]//4. Actualizar facturas
+        public async Task<IActionResult> Actualizar(Guid id)
+        {
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            // 1. Obtenemos la factura existente por su ID
+            var factura = await apiHttp.GetFromJsonAsync<Factura>($"api/facturas/{id}");
+            if (factura == null) return NotFound();
+
+            // 2. Cargamos los catálogos para los menús desplegables
+            ViewBag.ListaClientes = await apiHttp.GetFromJsonAsync<List<Cliente>>("api/clientes") ?? new List<Cliente>();
+            ViewBag.ListaEmpleados = await apiHttp.GetFromJsonAsync<List<Empleado>>("api/empleados") ?? new List<Empleado>();
+            ViewBag.ListaProductos = await apiHttp.GetFromJsonAsync<List<Producto>>("api/productos") ?? new List<Producto>();
+
+            return View(factura);
+        }
+
+        // 4. ACTUALIZAR FACTURA (POST)
+        [HttpPost]
+        public async Task<IActionResult> Actualizar(Guid id, Factura facturaActualizada)
+        {
+            if (id != facturaActualizada.Id) return BadRequest();
+
+            // Ignoramos campos autogenerados para evitar errores de validación 
+            ModelState.Remove("NumeroFactura");
+            ModelState.Remove("FechaHoraEmision");
+            ModelState.Remove("Detalles[0].UnidadMedida");
+            ModelState.Remove("Detalles[0].ProductoAsociado");
+
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ListaClientes = await apiHttp.GetFromJsonAsync<List<Cliente>>("api/clientes") ?? new List<Cliente>();
+                ViewBag.ListaEmpleados = await apiHttp.GetFromJsonAsync<List<Empleado>>("api/empleados") ?? new List<Empleado>();
+                ViewBag.ListaProductos = await apiHttp.GetFromJsonAsync<List<Producto>>("api/productos") ?? new List<Producto>();
+                return View(facturaActualizada);
+            }
+
+            // Enviamos la actualización a la API 
+            var respuesta = await apiHttp.PutAsJsonAsync($"api/facturas/{id}", facturaActualizada);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "Factura actualizada correctamente";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var errorMensaje = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("", errorMensaje);
+
+                ViewBag.ListaClientes = await apiHttp.GetFromJsonAsync<List<Cliente>>("api/clientes") ?? new List<Cliente>();
+                ViewBag.ListaEmpleados = await apiHttp.GetFromJsonAsync<List<Empleado>>("api/empleados") ?? new List<Empleado>();
+                ViewBag.ListaProductos = await apiHttp.GetFromJsonAsync<List<Producto>>("api/productos") ?? new List<Producto>();
+                return View(facturaActualizada);
+            }
+        }
     }
 }

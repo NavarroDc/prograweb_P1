@@ -1,0 +1,107 @@
+﻿@model Carniceria.Models.Factura
+@{
+    ViewData["Title"] = "Actualizar Factura";
+}
+
+<h2>Actualizar Factura: @Model.NumeroFactura</h2>
+<hr />
+
+<form asp-action="Actualizar" method="post">
+    <div asp-validation-summary="All" style="color: red; margin-bottom: 15px;"></div>
+
+   
+    <input type="hidden" asp-for="Id" />
+
+    <!-- INFORMACIÓN GENERAL -->
+    <fieldset style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <legend><b>Información General</b></legend>
+
+        <p>
+            <label>Cliente:</label><br />
+            <select asp-for="ClienteId" class="form-control">
+                <option value="">-- Seleccione un cliente --</option>
+                @if (ViewBag.ListaClientes != null)
+                {
+                    foreach (var cliente in ViewBag.ListaClientes)
+                    {
+                        <option value="@cliente.Id">@cliente.Nombre @cliente.PrimerApellido @cliente.SegundoApellido (@cliente.Identificacion)</option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Empleado Responsable:</label><br />
+            <select asp-for="EmpleadoId" class="form-control">
+                <option value="">-- Seleccione un empleado --</option>
+                @if (ViewBag.ListaEmpleados != null)
+                {
+                    foreach (var empleado in ViewBag.ListaEmpleados)
+                    {
+                        <option value="@empleado.Id">@empleado.Nombre @empleado.PrimerApellido</option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Método de Pago:</label><br />
+            <select asp-for="MetodoPago" class="form-control">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="SINPE Móvil">SINPE Móvil</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+        </p>
+
+        <p>
+            <label>Estado de la Factura:</label><br />
+            <select asp-for="Estado" class="form-control">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Pagada">Pagada (Descuenta Stock)</option>
+                <option value="Anulada">Anulada (Devuelve Stock)</option>
+            </select>
+        </p>
+
+        <p>
+            <label>Porcentaje de Descuento (0 - 25):</label><br />
+            <input asp-for="PorcentajeDescuento" type="number" step="0.01" class="form-control" />
+        </p>
+    </fieldset>
+
+    <!-- DETALLE DE LA FACTURA -->
+    <fieldset style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <legend><b>Línea de Detalle (Productos)</b></legend>
+
+        @{
+            var primerDetalle = Model.Detalles?.FirstOrDefault() ?? new Carniceria.Models.DetalleFactura();
+        }
+
+        <input type="hidden" name="Detalles[0].IdentificadorDetalle" value="@primerDetalle.IdentificadorDetalle" />
+
+        <p>
+            <label>Producto:</label><br />
+            <select name="Detalles[0].ProductoId" class="form-control">
+                <option value="">-- Seleccione un producto --</option>
+                @if (ViewBag.ListaProductos != null)
+                {
+                    foreach (var producto in ViewBag.ListaProductos)
+                    {
+                        var seleccionado = producto.Id == primerDetalle.ProductoId ? "selected" : "";
+                        <!option value="@producto.Id" @seleccionado>@producto.NombreProducto (₡@producto.PrecioUnidadMedida - Stock: @producto.ExistenciaActual)</!option>
+                    }
+                }
+            </select>
+        </p>
+
+        <p>
+            <label>Cantidad:</label><br />
+            <input name="Detalles[0].Cantidad" type="number" step="0.01" value="@primerDetalle.Cantidad" class="form-control" />
+        </p>
+    </fieldset>
+
+    <p>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button> |
+        <a asp-action="Index">Volver al listado</a>
+    </p>
+</form>

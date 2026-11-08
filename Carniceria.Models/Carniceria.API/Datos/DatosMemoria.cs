@@ -37,7 +37,20 @@ namespace Carniceria.API.Datos
                 Turno = "Tarde"
             }
         };
-        public static List<Producto> Productos { get; set; } = new List<Producto>();
+        public static List<Producto> Productos { get; set; } = new List<Producto>
+        {
+            new Producto
+            {
+                Id = Guid.NewGuid(),
+                CodigoProducto = "123abc",
+                NombreProducto = "Salchichón",
+                Categoria = "Embutidos",
+                UnidadMedida = "Unidad",
+                PrecioUnidadMedida = 15000,
+                ExistenciaActual = 30,
+                ExistenciaMinima = 10
+            }
+        };
         public static List<Proveedor> Proveedores { get; set; } = new List<Proveedor>();
         public static List<Factura> Facturas { get; set; } = new List<Factura>();
         public static List<DetalleFactura> DetallesFactura {  get; set; } = new List<DetalleFactura>();

@@ -107,34 +107,36 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-        /* //ELIMINAR PROVEEDORES GET
+        //ELIMINAR PROVEEDORES GET
         [HttpGet]
-        public IActionResult Eliminar(Guid id)
+        public async Task<IActionResult> Eliminar(Guid id)
         {
-            var proveedor = listaProveedores.FirstOrDefault(p => p.Id == id);
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await proveedorHttp.GetAsync($"api/proveedores/{id}");
 
-            if(proveedor == null)
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var proveedor = await respuesta.Content.ReadFromJsonAsync<Proveedor>();
+                return View(proveedor);
             }
-            return View(proveedor);
+            return RedirectToAction("Index");
         }
 
         //ELIMINAR PROVEEDORES POST
         [HttpPost]
-        public IActionResult EliminarConfirmado(Guid id)
+        public async Task<IActionResult> EliminarConfirmado(Guid id)
         {
-            var proveedor = listaProveedores.FirstOrDefault(p => p.Id == id);
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await proveedorHttp.DeleteAsync($"api/proveedores/{id}");
 
-            if(proveedor != null)
+            if (respuesta.IsSuccessStatusCode)
             {
-                listaProveedores.Remove(proveedor);
                 TempData["MensajeExito"] = "El proveedor se eliminó correctamente";
             }
             return RedirectToAction("Index");
         }
 
-        //BUSCAR PROVEEDORES GET
+       /* //BUSCAR PROVEEDORES GET
         [HttpGet]
         public IActionResult Buscar()
         {

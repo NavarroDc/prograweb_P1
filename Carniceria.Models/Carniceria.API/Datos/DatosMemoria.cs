@@ -51,7 +51,21 @@ namespace Carniceria.API.Datos
                 ExistenciaMinima = 10
             }
         };
-        public static List<Proveedor> Proveedores { get; set; } = new List<Proveedor>();
+        public static List<Proveedor> Proveedores { get; set; } = new List<Proveedor>
+        {
+            new Proveedor
+            {
+                Id = Guid.NewGuid(),
+                TipoIdentificacion = "Cédula nacional",
+                Identificacion = "10101010",
+                RazonSocial = "Walmart",
+                PersonaContacto = "Manuel",
+                Telefono = "88888888",
+                CorreoElectronico = "datoInicial321@gmail.com",
+                TipoSuministro = "Empaques",
+                FrecuenciaEntrega = "Quincenal"
+            }
+        };
         public static List<Factura> Facturas { get; set; } = new List<Factura>();
         public static List<DetalleFactura> DetallesFactura {  get; set; } = new List<DetalleFactura>();
     }

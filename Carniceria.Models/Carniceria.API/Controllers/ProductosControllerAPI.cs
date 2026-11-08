@@ -70,7 +70,7 @@ namespace Carniceria.API.Controllers
                 return BadRequest("El proveedor seleccionado no existe...");
             }
             //Validar que el nuevo código no lo tenga otro producto
-            bool existeOtroCodigo = DatosMemoria.Productos.Any(p => p.CodigoProducto == productoActualizado.CodigoProducto);
+            bool existeOtroCodigo = DatosMemoria.Productos.Any(p => p.CodigoProducto == productoActualizado.CodigoProducto && p.Id != id);
             if (existeOtroCodigo)
             {
                 return BadRequest("Ya existe otro producto con el código ingresado");

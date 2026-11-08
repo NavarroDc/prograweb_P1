@@ -166,7 +166,7 @@ namespace Carniceria.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        /*//BUSCAR PRODUCTO (GET)
+        //BUSCAR PRODUCTO (GET)
         [HttpGet]
         public IActionResult Buscar()
         {
@@ -175,24 +175,44 @@ namespace Carniceria.Web.Controllers
 
         //BUSCAR PRODUCTO (POST)
         [HttpPost]
-        public IActionResult Buscar(string codigoProducto)
+        public async Task<IActionResult> Buscar(string codigoProducto)
         {
+            //Validar espacios vacíos
             if (string.IsNullOrWhiteSpace(codigoProducto))
             {
                 ViewBag.Mensaje = "Ingrese el código o el nombre para buscar un producto";
                 return View();
             }
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
 
-            //Búsqueda de productos por coincidencia
-            var producto = listaProductos.FirstOrDefault(p => p.CodigoProducto == codigoProducto);
-
-            if(producto == null)
+            try
             {
-                ViewBag.Mensaje = "No se encontraron productos con el código ingresado";
+                // Consulta API
+                var respuesta = await apiHttp.GetAsync($"api/productos/buscar/{codigoProducto}");
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    // La API devuelve una lista por si hay varias coincidencias de nombre
+                    var productosEncontrados = await respuesta.Content.ReadFromJsonAsync<List<Producto>>();
+                    var producto = productosEncontrados?.FirstOrDefault();
+                    return View(producto);
+                }
+                else if (respuesta.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ViewBag.Mensaje = "No se encontraron productos con los datos ingresados";
+                    return View();
+                }
+                else
+                {
+                    ViewBag.Mensaje = "Ocurrió un error al consultar los datos";
+                    return View();
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Mensaje = "Error de conexión con la API";
                 return View();
             }
-
-            return View(producto);
-        }*/
+        }
     }
 }

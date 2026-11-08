@@ -64,39 +64,50 @@ namespace Carniceria.Web.Controllers
             }
         }
 
-        /*//ACTUALIZAR PROVEEDORES GET
+        //ACTUALIZAR PROVEEDORES GET
         [HttpGet]
-        public IActionResult Actualizar(Guid id)
+        public async Task<IActionResult> Actualizar(Guid id)
         {
-            var proveedor = listaProveedores.FirstOrDefault(p => p.Id == id);
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await proveedorHttp.GetAsync($"api/proveedores/{id}");
 
-            if(proveedor == null)
+            if (respuesta.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                var proveedor = await respuesta.Content.ReadFromJsonAsync<Proveedor>();
+                return View(proveedor);
             }
-            return View(proveedor);
+            return RedirectToAction("Index");
         }
 
         //ACTUALIZAR PROVEEDORES POST
         [HttpPost]
-        public IActionResult Actualizar(Proveedor proveedor)
+        public async Task <IActionResult> Actualizar(Guid id, Proveedor proveedor)
         {
-            if (ModelState.IsValid)
+            proveedor.Id = id;
+            ModelState.Remove("Id");
+
+            if (!ModelState.IsValid)
             {
-                var index = listaProveedores.FindIndex(p => p.Id == proveedor.Id);
+                return View(proveedor);
+            }
 
-                if (index != -1)
-                {
-                    listaProveedores[index] = proveedor;
-                    TempData["MensajeExito"] = "El proveedor se actualizó correctamente";
-                }
+            var proveedorHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await proveedorHttp.PutAsJsonAsync($"api/proveedores/{id}", proveedor);
 
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "El proveedor se actualizó correctamente";
                 return RedirectToAction("Index");
             }
-            return View(proveedor);
+            else
+            {
+                var mensajeError = await respuesta.Content.ReadAsStringAsync();
+                ModelState.AddModelError("Identificacion", mensajeError);
+                return View(proveedor);
+            }
         }
 
-        //ELIMINAR PROVEEDORES GET
+        /* //ELIMINAR PROVEEDORES GET
         [HttpGet]
         public IActionResult Eliminar(Guid id)
         {

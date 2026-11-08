@@ -5,6 +5,9 @@ namespace Carniceria.API.Datos
 {
     public static class DatosMemoria
     {
+        // ID fijo que se comparte entre las listas
+        public static readonly Guid _idProveedorPorDefecto = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
         public static List<Cliente> Clientes { get; set; } = new List<Cliente>
         {
             new Cliente
@@ -42,6 +45,7 @@ namespace Carniceria.API.Datos
             new Producto
             {
                 Id = Guid.NewGuid(),
+                ProveedorId = _idProveedorPorDefecto,
                 CodigoProducto = "123abc",
                 NombreProducto = "Salchichón",
                 Categoria = "Embutidos",
@@ -55,7 +59,7 @@ namespace Carniceria.API.Datos
         {
             new Proveedor
             {
-                Id = Guid.NewGuid(),
+                Id = _idProveedorPorDefecto,
                 TipoIdentificacion = "Cédula nacional",
                 Identificacion = "10101010",
                 RazonSocial = "Walmart",

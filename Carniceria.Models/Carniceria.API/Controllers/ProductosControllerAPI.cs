@@ -81,5 +81,15 @@ namespace Carniceria.API.Controllers
             DatosMemoria.Productos[index] = productoActualizado;
             return NoContent();
         }
+
+        [HttpDelete("{id:guid}")]//5. Eliminar producto
+        public IActionResult EliminarProducto(Guid id)
+        {
+            var producto = DatosMemoria.Productos.FirstOrDefault(p => p.Id == id);
+            if (producto == null) return NotFound();
+
+            DatosMemoria.Productos.Remove(producto);
+            return NoContent();
+        }
     }
 }

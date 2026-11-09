@@ -227,5 +227,23 @@ namespace Carniceria.Web.Controllers
                 return View(factura);
             }
         }
+
+        [HttpGet]//6. Anular factura
+        public async Task<IActionResult> Anular(Guid id)
+        {
+            var apiHttp = _httpClientFactory.CreateClient("CarniceriaApi");
+            var respuesta = await apiHttp.PutAsync($"api/facturas/anular/{id}", null);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                TempData["MensajeExito"] = "La factura ha sido anulada correctamente y el inventario modificado";
+            }
+            else
+            {
+                var errorMensaje = await respuesta.Content.ReadAsStringAsync();
+                TempData["MensajeError"] = string.IsNullOrWhiteSpace(errorMensaje) ? "No se pudo anular la factura" : errorMensaje;
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

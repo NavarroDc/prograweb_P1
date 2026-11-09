@@ -163,5 +163,33 @@ namespace Carniceria.API.Controllers
             DatosMemoria.Facturas.Remove(factura);
             return NoContent();
         }
+
+        //6. Anular factura
+        [HttpPut("anular/{id}")]
+        public IActionResult AnularFactura(Guid id)
+        {
+            var factura = DatosMemoria.Facturas.FirstOrDefault(f => f.Id == id);
+            if (factura == null) return NotFound();
+
+            if (factura.Estado == "Anulada")
+            {
+                return BadRequest("La factura ya se encuentra anulada.");
+            }
+
+            if (factura.Estado == "Pagada")
+            {
+                foreach (var detalle in factura.Detalles)
+                {
+                    var producto = DatosMemoria.Productos.FirstOrDefault(p => p.Id == detalle.ProductoId);
+                    if (producto != null)
+                    {
+                        producto.ExistenciaActual += detalle.Cantidad;
+                    }
+                }
+            }
+
+            factura.Estado = "Anulada";
+            return NoContent();
+        }
     }
 }
